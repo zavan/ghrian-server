@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_06_09_180234) do
+ActiveRecord::Schema[8.1].define(version: 2026_06_09_190000) do
   create_table "api_tokens", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "last_used_at"
@@ -69,7 +69,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_09_180234) do
     t.integer "inverter_id", null: false
     t.datetime "recorded_at"
     t.datetime "updated_at", null: false
-    t.index ["inverter_id", "recorded_at"], name: "index_readings_on_inverter_id_and_recorded_at"
+    t.index ["inverter_id", "recorded_at"], name: "index_readings_on_inverter_id_and_recorded_at", unique: true
   end
 
   create_table "sessions", force: :cascade do |t|

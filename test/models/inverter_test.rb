@@ -36,6 +36,13 @@ class InverterTest < ActiveSupport::TestCase
     assert_equal 50, reading.value_for("battery_soc")
   end
 
+  test "a redelivered message (same inverter + timestamp) is stored only once" do
+    # QoS 1 is at-least-once, so the broker may redeliver. Same timestamp => one row.
+    assert_difference -> { Reading.count }, 1 do
+      2.times { Inverter.ingest(topic: "ghrian/inverter/02", payload: SAMPLE.to_json) }
+    end
+  end
+
   test "availability message flips status without creating a reading" do
     inverter = inverters(:garage)
 
