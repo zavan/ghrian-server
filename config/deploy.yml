@@ -1,8 +1,8 @@
 # Name of your application. Used to uniquely configure containers.
 service: ghrian-server
 
-# Name of the container image (use your-user/app-name on external registries).
-image: your-user/ghrian-server
+# Name of the container image — the one published to Docker Hub.
+image: zavan/ghrian-server
 
 # Deploy to these servers.
 servers:
@@ -26,8 +26,9 @@ servers:
 
 # Where you keep your container images.
 registry:
-  # Alternatives: hub.docker.com / registry.digitalocean.com / ghcr.io / ...
-  server: ghcr.io   # set to your registry; localhost:5555 only for a local test registry
+  # Docker Hub (where the CI workflow publishes). Alternatives: ghcr.io / ...
+  server: docker.io
+  username: zavan
 
   # Needed for authenticated registries.
   # username: your-user
