@@ -2,7 +2,7 @@ class Inverter
   # Value object over an inverter's `latest_values` snapshot, presenting the live
   # power flow, battery/grid state, and today's energy totals in display-ready form
   # (the Solis-style overview). Sign conventions follow the agent/device notes:
-  #   inverter_ac_grid_port_power: + = exporting to grid,   - = importing
+  #   meter_active_power:          + = exporting to grid,   - = importing (grid CT/meter)
   #   battery_current_direction:   0 = charging,            1 = discharging
   #   battery_power:               magnitude in W (sign used only as a fallback)
   #
@@ -51,7 +51,12 @@ class Inverter
     end
 
     def grid
-      watts = num("inverter_ac_grid_port_power")
+      # The external CT/meter (meter_active_power) is the true grid import/export —
+      # what the Solis app shows. inverter_ac_grid_port_power is the inverter's own
+      # grid-port power, which tracks the load it feeds (≈ household load when
+      # islanded on battery), so it overstates the grid. Prefer the meter; fall back
+      # to the port reading when no meter is reported. Both: + = export, − = import.
+      watts = num("meter_active_power") || num("inverter_ac_grid_port_power")
       direction = if watts.nil? || watts.zero?
         :idle
       elsif watts.positive?
