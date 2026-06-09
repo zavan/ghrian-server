@@ -1,8 +1,12 @@
 <% content_for :title, "Inverters" %>
 
 <div class="mb-6 flex items-center justify-between gap-4">
-  <h1 class="text-2xl font-semibold">Inverters</h1>
-  <%= link_to "Add inverter", new_inverter_path, class: "btn" %>
+  <h1 class="flex items-center gap-2 text-2xl font-semibold">
+    <%= lucide_icon "zap", class: "size-6 text-amber-400" %>Inverters
+  </h1>
+  <%= link_to new_inverter_path, class: "btn" do %>
+    <%= lucide_icon "plus", class: "size-4" %>Add inverter
+  <% end %>
 </div>
 
 <% if @inverters.any? %>
@@ -23,13 +27,17 @@
           <td><%= link_to inverter.name, inverter, class: "text-sky-400 hover:text-sky-300" %></td>
           <td><code><%= inverter.mqtt_topic %></code></td>
           <td><%= inverter.device_model.presence || "—" %></td>
-          <td><span class="badge badge-<%= inverter.status %>"><%= inverter.status %></span></td>
+          <td><%= status_badge inverter.status %></td>
           <td><%= inverter.last_reading_at ? "#{time_ago_in_words(inverter.last_reading_at)} ago" : "—" %></td>
           <td>
             <div class="flex items-center gap-3">
-              <%= link_to "Edit", edit_inverter_path(inverter), class: "text-sky-400 hover:text-sky-300" %>
-              <%= button_to "Remove", inverter, method: :delete, class: "btn-danger",
-                    data: { turbo_confirm: "Remove #{inverter.name}? Its readings will be deleted." } %>
+              <%= link_to edit_inverter_path(inverter), class: "inline-flex items-center gap-1 text-sky-400 hover:text-sky-300" do %>
+                <%= lucide_icon "pencil", class: "size-4" %>Edit
+              <% end %>
+              <%= button_to inverter, method: :delete, class: "btn-danger",
+                    data: { turbo_confirm: "Remove #{inverter.name}? Its readings will be deleted." } do %>
+                <%= lucide_icon "trash-2", class: "size-4" %>Remove
+              <% end %>
             </div>
           </td>
         </tr>
@@ -38,6 +46,7 @@
   </table>
 <% else %>
   <div class="rounded-xl border border-dashed border-slate-700 bg-slate-800 p-8 text-center text-slate-400">
+    <%= lucide_icon "zap-off", class: "mx-auto mb-2 size-8 text-slate-500" %>
     <p>No inverters yet. Add one with the MQTT topic the agent publishes to.</p>
   </div>
 <% end %>

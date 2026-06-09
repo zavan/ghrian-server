@@ -16,7 +16,9 @@
         <%= form.password_field :password, required: true, autocomplete: "current-password",
               maxlength: 72, class: "field-input" %>
       </div>
-      <%= form.submit "Sign in", class: "btn w-full" %>
+      <%= button_tag type: "submit", class: "btn w-full justify-center" do %>
+        <%= lucide_icon "log-in", class: "size-4" %>Sign in
+      <% end %>
     <% end %>
 
     <div class="mt-4 flex justify-between text-sm">

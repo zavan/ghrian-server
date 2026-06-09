@@ -27,23 +27,35 @@
   <body class="min-h-screen bg-slate-900 text-slate-200 antialiased">
     <% if authenticated? %>
       <header class="flex items-center gap-6 border-b border-slate-700 bg-slate-800 px-6 py-3">
-        <a href="<%= root_path %>" class="text-lg font-bold text-slate-100">☀︎ ghrian</a>
+        <a href="<%= root_path %>" class="inline-flex items-center gap-1.5 text-lg font-bold text-slate-100">
+          <%= lucide_icon "sun", class: "size-5 text-amber-400" %>ghrian
+        </a>
         <nav class="flex flex-1 gap-5 text-sm">
-          <%= link_to "Dashboard", root_path, class: "text-slate-400 hover:text-slate-100" %>
-          <%= link_to "Inverters", inverters_path, class: "text-slate-400 hover:text-slate-100" %>
-          <%= link_to "MQTT", mqtt_config_path, class: "text-slate-400 hover:text-slate-100" %>
-          <%= link_to "Costs", tariff_path, class: "text-slate-400 hover:text-slate-100" %>
-          <%= link_to "API Tokens", api_tokens_path, class: "text-slate-400 hover:text-slate-100" %>
-          <%= link_to "Users", users_path, class: "text-slate-400 hover:text-slate-100" %>
+          <% [
+               ["Dashboard", root_path, "layout-dashboard"],
+               ["Inverters", inverters_path, "zap"],
+               ["MQTT", mqtt_config_path, "radio"],
+               ["Costs", tariff_path, "circle-dollar-sign"],
+               ["API Tokens", api_tokens_path, "key-round"],
+               ["Users", users_path, "users"]
+             ].each do |label, path, icon| %>
+            <%= link_to path, class: "inline-flex items-center gap-1.5 text-slate-400 hover:text-slate-100" do %>
+              <%= lucide_icon icon, class: "size-4" %><%= label %>
+            <% end %>
+          <% end %>
         </nav>
-        <%= button_to "Sign out", session_path, method: :delete,
-              class: "text-sm text-sky-400 hover:text-sky-300" %>
+        <%= button_to session_path, method: :delete,
+              class: "inline-flex items-center gap-1.5 text-sm text-sky-400 hover:text-sky-300" do %>
+          <%= lucide_icon "log-out", class: "size-4" %>Sign out
+        <% end %>
       </header>
     <% end %>
 
     <main class="mx-auto max-w-5xl p-6">
       <% flash.each do |type, message| %>
-        <div class="mb-4 rounded-xl border px-4 py-3 <%= flash_classes(type) %>"><%= message %></div>
+        <div class="mb-4 flex items-center gap-2 rounded-xl border px-4 py-3 <%= flash_classes(type) %>">
+          <%= flash_icon(type) %><span><%= message %></span>
+        </div>
       <% end %>
 
       <%= yield %>

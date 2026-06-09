@@ -26,7 +26,9 @@
         <%= form.password_field :password_confirmation, required: true, autocomplete: "new-password",
               maxlength: 72, class: "field-input" %>
       </div>
-      <%= form.submit "Create account", class: "btn w-full" %>
+      <%= button_tag type: "submit", class: "btn w-full justify-center" do %>
+        <%= lucide_icon "user-plus", class: "size-4" %>Create account
+      <% end %>
     <% end %>
 
     <div class="mt-4 text-sm">

@@ -8,10 +8,14 @@
   <% end %>
 
   <% if summary.navigable? %>
-    <div class="ml-auto flex items-center gap-3 text-sm">
-      <%= link_to "‹", link.call(summary.period, summary.prev_date), class: "text-slate-400 hover:text-slate-100" %>
+    <div class="ml-auto flex items-center gap-2 text-sm">
+      <%= link_to link.call(summary.period, summary.prev_date), class: "text-slate-400 hover:text-slate-100", aria: { label: "Previous #{summary.period}" } do %>
+        <%= lucide_icon "chevron-left", class: "size-5" %>
+      <% end %>
       <span class="min-w-32 text-center font-medium"><%= summary.label %></span>
-      <%= link_to "›", link.call(summary.period, summary.next_date), class: "text-slate-400 hover:text-slate-100" %>
+      <%= link_to link.call(summary.period, summary.next_date), class: "text-slate-400 hover:text-slate-100", aria: { label: "Next #{summary.period}" } do %>
+        <%= lucide_icon "chevron-right", class: "size-5" %>
+      <% end %>
     </div>
   <% else %>
     <span class="ml-auto text-sm font-medium text-slate-400"><%= summary.label %></span>

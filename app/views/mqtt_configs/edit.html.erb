@@ -1,6 +1,8 @@
 <% content_for :title, "Edit MQTT connection" %>
 
-<h1 class="mb-6 text-2xl font-semibold">Edit MQTT connection</h1>
+<h1 class="mb-6 flex items-center gap-2 text-2xl font-semibold">
+  <%= lucide_icon "radio", class: "size-6 text-sky-400" %>Edit MQTT connection
+</h1>
 
 <%= form_with model: @mqtt_config, url: mqtt_config_path, method: :patch, class: "max-w-xl" do |form| %>
   <% if @mqtt_config.errors.any? %>
@@ -53,7 +55,9 @@
   </div>
 
   <div class="mt-5 flex items-center gap-4">
-    <%= form.submit "Save", class: "btn" %>
+    <%= button_tag type: "submit", class: "btn" do %>
+      <%= lucide_icon "check", class: "size-4" %>Save
+    <% end %>
     <%= link_to "Cancel", mqtt_config_path, class: "btn-link" %>
   </div>
 <% end %>

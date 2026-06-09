@@ -3,13 +3,13 @@
 /* Reusable component classes (Tailwind @apply) so markup stays readable. */
 @layer components {
   .btn {
-    @apply inline-block cursor-pointer rounded-lg bg-sky-400 px-4 py-2 text-sm font-semibold text-sky-950 hover:brightness-105;
+    @apply inline-flex cursor-pointer items-center gap-1.5 rounded-lg bg-sky-400 px-4 py-2 text-sm font-semibold text-sky-950 hover:brightness-105;
   }
   .btn-link {
-    @apply cursor-pointer border-0 bg-transparent p-0 text-sm text-sky-400 hover:text-sky-300;
+    @apply inline-flex cursor-pointer items-center gap-1 border-0 bg-transparent p-0 text-sm text-sky-400 hover:text-sky-300;
   }
   .btn-danger {
-    @apply cursor-pointer border-0 bg-transparent p-0 text-sm text-red-400 hover:text-red-300;
+    @apply inline-flex cursor-pointer items-center gap-1 border-0 bg-transparent p-0 text-sm text-red-400 hover:text-red-300;
   }
 
   .card {

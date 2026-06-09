@@ -32,7 +32,9 @@
   </div>
 
   <div class="mt-5 flex items-center gap-4">
-    <%= form.submit class: "btn" %>
+    <%= button_tag type: "submit", class: "btn" do %>
+      <%= lucide_icon "check", class: "size-4" %><%= inverter.persisted? ? "Save changes" : "Add inverter" %>
+    <% end %>
     <%= link_to "Cancel", inverters_path, class: "btn-link" %>
   </div>
 <% end %>

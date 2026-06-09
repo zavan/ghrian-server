@@ -1,6 +1,8 @@
 <% content_for :title, "API tokens" %>
 
-<h1 class="mb-6 text-2xl font-semibold">API tokens</h1>
+<h1 class="mb-6 flex items-center gap-2 text-2xl font-semibold">
+  <%= lucide_icon "key-round", class: "size-6 text-amber-400" %>API tokens
+</h1>
 
 <section class="card">
   <p class="mb-4 text-slate-400">
@@ -12,7 +14,9 @@
     <%= form.label :name, "Create a token", class: "field-label" %>
     <div class="flex gap-3">
       <%= form.text_field :name, placeholder: "macOS app", autofocus: true, class: "field-input max-w-xs" %>
-      <%= form.submit "Generate", class: "btn" %>
+      <%= button_tag type: "submit", class: "btn" do %>
+        <%= lucide_icon "plus", class: "size-4" %>Generate
+      <% end %>
     </div>
     <% if @api_token.errors.any? %>
       <small class="mt-1.5 block text-red-400"><%= @api_token.errors.full_messages.to_sentence %></small>
@@ -32,8 +36,10 @@
           <td><code class="break-all"><%= token.token %></code></td>
           <td><%= token.last_used_at ? "#{time_ago_in_words(token.last_used_at)} ago" : "never" %></td>
           <td>
-            <%= button_to "Revoke", api_token_path(token), method: :delete, class: "btn-danger",
-                  data: { turbo_confirm: "Revoke “#{token.name}”? Clients using it will stop working." } %>
+            <%= button_to api_token_path(token), method: :delete, class: "btn-danger",
+                  data: { turbo_confirm: "Revoke “#{token.name}”? Clients using it will stop working." } do %>
+              <%= lucide_icon "trash-2", class: "size-4" %>Revoke
+            <% end %>
           </td>
         </tr>
       <% end %>
@@ -41,6 +47,7 @@
   </table>
 <% else %>
   <div class="rounded-xl border border-dashed border-slate-700 bg-slate-800 p-8 text-center text-slate-400">
+    <%= lucide_icon "key-round", class: "mx-auto mb-2 size-8 text-slate-500" %>
     <p>No tokens yet.</p>
   </div>
 <% end %>

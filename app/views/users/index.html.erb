@@ -1,6 +1,8 @@
 <% content_for :title, "Users" %>
 
-<h1 class="mb-6 text-2xl font-semibold">Users</h1>
+<h1 class="mb-6 flex items-center gap-2 text-2xl font-semibold">
+  <%= lucide_icon "users", class: "size-6 text-sky-400" %>Users
+</h1>
 
 <section class="card">
   <p class="mb-4 text-slate-400">
@@ -29,7 +31,9 @@
         <%= form.password_field :password_confirmation, autocomplete: "new-password", class: "field-input" %>
       </div>
     </div>
-    <%= form.submit "Create account", class: "btn" %>
+    <%= button_tag type: "submit", class: "btn" do %>
+      <%= lucide_icon "user-plus", class: "size-4" %>Create account
+    <% end %>
   <% end %>
 </section>
 
@@ -45,8 +49,10 @@
         <td><%= user.created_at.to_date.to_fs(:long) %></td>
         <td>
           <% unless user == Current.user %>
-            <%= button_to "Remove", user, method: :delete, class: "btn-danger",
-                  data: { turbo_confirm: "Remove #{user.email_address}? Their sessions and API tokens are revoked." } %>
+            <%= button_to user, method: :delete, class: "btn-danger",
+                  data: { turbo_confirm: "Remove #{user.email_address}? Their sessions and API tokens are revoked." } do %>
+              <%= lucide_icon "trash-2", class: "size-4" %>Remove
+            <% end %>
           <% end %>
         </td>
       </tr>

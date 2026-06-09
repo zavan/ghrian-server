@@ -4,7 +4,9 @@
 <% dash = (circ * pct / 100).round(2) %>
 
 <div class="rounded-xl border border-slate-700 bg-slate-800/50 p-5">
-  <p class="mb-3 text-sm text-slate-400">Battery</p>
+  <p class="mb-3 flex items-center gap-1.5 text-sm text-slate-400">
+    <%= lucide_icon "battery-medium", class: "size-4" %>Battery
+  </p>
   <div class="flex items-center justify-between">
     <div>
       <p class="text-2xl font-semibold"><%= snapshot.battery_state %></p>

@@ -4,8 +4,12 @@
 <%= turbo_stream_from Broadcastable::DASHBOARD_STREAM %>
 
 <div class="mb-6 flex items-center justify-between gap-4">
-  <h1 class="text-2xl font-semibold">Dashboard</h1>
-  <%= link_to "Add inverter", new_inverter_path, class: "btn" %>
+  <h1 class="flex items-center gap-2 text-2xl font-semibold">
+    <%= lucide_icon "layout-dashboard", class: "size-6 text-sky-400" %>Dashboard
+  </h1>
+  <%= link_to new_inverter_path, class: "btn" do %>
+    <%= lucide_icon "plus", class: "size-4" %>Add inverter
+  <% end %>
 </div>
 
 <% if @inverters.any? %>
@@ -16,8 +20,11 @@
   <%= render partial: "inverters/panel", collection: @inverters, as: :inverter %>
 <% else %>
   <div class="rounded-xl border border-dashed border-slate-700 bg-slate-800 p-8 text-center text-slate-400">
+    <%= lucide_icon "zap-off", class: "mx-auto mb-2 size-8 text-slate-500" %>
     <p>No inverters yet.</p>
     <p class="mt-1">Add one with the MQTT topic the agent publishes to (e.g. <code>ghrian/inverter/01</code>).</p>
-    <%= link_to "Add your first inverter", new_inverter_path, class: "btn mt-3" %>
+    <%= link_to new_inverter_path, class: "btn mt-3" do %>
+      <%= lucide_icon "plus", class: "size-4" %>Add your first inverter
+    <% end %>
   </div>
 <% end %>

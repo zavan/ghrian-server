@@ -1,8 +1,12 @@
 <% content_for :title, "MQTT connection" %>
 
 <div class="mb-6 flex items-center justify-between gap-4">
-  <h1 class="text-2xl font-semibold">MQTT connection</h1>
-  <%= link_to "Edit", edit_mqtt_config_path, class: "btn" %>
+  <h1 class="flex items-center gap-2 text-2xl font-semibold">
+    <%= lucide_icon "radio", class: "size-6 text-sky-400" %>MQTT connection
+  </h1>
+  <%= link_to edit_mqtt_config_path, class: "btn" do %>
+    <%= lucide_icon "pencil", class: "size-4" %>Edit
+  <% end %>
 </div>
 
 <section class="card">

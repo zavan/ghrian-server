@@ -69,3 +69,6 @@ gem "mqtt", "~> 0.7.0"
 gem "chartkick", "~> 5.2"
 
 gem "tailwindcss-rails", "~> 4.4"
+
+# Lucide icons rendered as inline SVG (no Node) — https://lucide.dev/icons
+gem "lucide-rails", "~> 0.7"

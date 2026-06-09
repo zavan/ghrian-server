@@ -4,11 +4,15 @@
 <div class="mb-6 flex items-center justify-between gap-4">
   <h1 class="flex items-center gap-3 text-2xl font-semibold">
     <%= @inverter.name %>
-    <span class="badge badge-<%= @inverter.status %>"><%= @inverter.status %></span>
+    <%= status_badge @inverter.status %>
   </h1>
   <div class="flex items-center gap-4">
-    <%= link_to "Dashboard", root_path, class: "btn-link" %>
-    <%= link_to "Edit", edit_inverter_path(@inverter), class: "btn" %>
+    <%= link_to root_path, class: "btn-link" do %>
+      <%= lucide_icon "arrow-left", class: "size-4" %>Dashboard
+    <% end %>
+    <%= link_to edit_inverter_path(@inverter), class: "btn" do %>
+      <%= lucide_icon "pencil", class: "size-4" %>Edit
+    <% end %>
   </div>
 </div>
 
@@ -35,7 +39,9 @@
 <% end %>
 
 <section class="card">
-  <h2 class="mb-3 text-lg font-semibold">Latest values</h2>
+  <h2 class="mb-3 flex items-center gap-2 text-lg font-semibold">
+    <%= lucide_icon "list", class: "size-5 text-slate-400" %>Latest values
+  </h2>
   <% if @inverter.latest_values.present? %>
     <table class="data-table">
       <thead><tr><th>Metric</th><th>Value</th><th>Unit</th></tr></thead>
