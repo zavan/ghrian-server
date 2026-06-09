@@ -169,7 +169,14 @@ docker run -d --name ghrian-mqtt --env-file server.env \
 
 The `AR_ENCRYPTION_*` keys encrypt any broker password you save, so keep them
 stable. (If you build your own image with baked-in credentials, `RAILS_MASTER_KEY`
-still works as an alternative.) For the full stack in one command, see the
+still works as an alternative.)
+
+To skip the broker setup screen on a fresh deploy, seed the connection from the
+environment: `MQTT_HOST`, `MQTT_PORT`, `MQTT_BASE_TOPIC`, `MQTT_USERNAME`,
+`MQTT_PASSWORD`, `MQTT_USE_TLS`. They're applied **only when the config row is first
+created** — after that the admin UI is the source of truth.
+
+For the full stack in one command, see the
 [`compose.yml`](https://github.com/zavan/ghrian) in the umbrella repo. Tags:
 `X.Y.Z` / `latest` from releases, `edge` tracks `main`.
 
