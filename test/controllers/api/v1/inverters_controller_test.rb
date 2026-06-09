@@ -21,7 +21,7 @@ class Api::V1::InvertersControllerTest < ActionDispatch::IntegrationTest
 
     body = response.parsed_body
     assert_equal Inverter.count, body["inverters"].size
-    assert(body["inverters"].any? { |i| i["mqtt_topic"] == "solar/inverter/01" })
+    assert(body["inverters"].any? { |i| i["mqtt_topic"] == "ghrian/inverter/01" })
   end
 
   test "shows an inverter with its latest snapshot" do

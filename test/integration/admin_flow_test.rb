@@ -77,7 +77,7 @@ class AdminFlowTest < ActionDispatch::IntegrationTest
     sign_in_as users(:one)
 
     assert_difference -> { Inverter.count }, 1 do
-      post inverters_url, params: { inverter: { name: "Loft", mqtt_topic: "solar/inverter/99" } }
+      post inverters_url, params: { inverter: { name: "Loft", mqtt_topic: "ghrian/inverter/99" } }
     end
     assert_redirected_to inverters_url
 

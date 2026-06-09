@@ -62,8 +62,9 @@ automatically (best-effort; a `mqtt` process restart is always a safe fallback).
 Each metric is self-describing `{ value, unit, label }`; bitfields also carry
 `<name>_active: []string`. Decoding is defensive (values may be number, string, or
 array). The retained `<topic>/availability` (`online`/`offline`) maps to inverter
-status. See the [agent README](https://github.com/zavan/ghrian-agent) for the
-authoritative shape.
+status. See the project-wide
+[payload contract](https://github.com/zavan/ghrian/blob/main/docs/payload.md) for
+the authoritative shape.
 
 ## Getting started
 
@@ -82,9 +83,9 @@ shared installation). You can't remove your own account or the last one.
 
 Then open http://localhost:3000, create an account, and in the admin:
 
-1. **MQTT → Edit**: set host/port and base topic (e.g. `localhost` / `1883` / `solar`).
+1. **MQTT → Edit**: set host/port and base topic (e.g. `localhost` / `1883` / `ghrian`).
 2. **Inverters → Add inverter**: set the MQTT topic the agent publishes to
-   (e.g. `solar/inverter/01`).
+   (e.g. `ghrian/inverter/01`).
 3. **API Tokens**: generate a token for API clients.
 
 > **Encryption keys:** `MqttConfig#password` is encrypted with Active Record
@@ -94,18 +95,18 @@ Then open http://localhost:3000, create an account, and in the admin:
 
 ## Dev against the real agent (reuse its broker)
 
-You only need an MQTT broker on `localhost:1883` publishing under `solar/#` — any
+You only need an MQTT broker on `localhost:1883` publishing under `ghrian/#` — any
 broker works. The easiest is to reuse the one shipped with
 [`ghrian-agent`](https://github.com/zavan/ghrian-agent): clone it alongside this
 repo and start its dev mosquitto.
 
 ```bash
 # in a clone of ghrian-agent:
-make dev-up                                  # mosquitto on localhost:1883 (anonymous, solar/#)
+make dev-up                                  # mosquitto on localhost:1883 (anonymous, ghrian/#)
 
 # in this repo:
 bin/dev                                      # web + listener + css
-# Configure MqttConfig (localhost:1883, base_topic solar) and add inverter solar/inverter/01.
+# Configure MqttConfig (localhost:1883, base_topic ghrian) and add inverter ghrian/inverter/01.
 
 # back in ghrian-agent, point it at your inverter (or fake one reading):
 make go-run ARGS="--config config.yml"       # or `make dev-pub` to publish a sample reading

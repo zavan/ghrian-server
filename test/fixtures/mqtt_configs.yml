@@ -5,5 +5,5 @@ primary:
   port: 1883
   username: ""
   client_id: ""
-  base_topic: solar
+  base_topic: ghrian
   use_tls: false

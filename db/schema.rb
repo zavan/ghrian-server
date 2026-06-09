@@ -51,7 +51,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_09_180234) do
   end
 
   create_table "mqtt_configs", force: :cascade do |t|
-    t.string "base_topic", default: "solar", null: false
+    t.string "base_topic", default: "ghrian", null: false
     t.string "client_id"
     t.datetime "created_at", null: false
     t.string "host", default: "localhost", null: false
