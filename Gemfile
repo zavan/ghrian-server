@@ -65,10 +65,13 @@ group :test do
   gem "selenium-webdriver"
 end
 
+# --- ghrian application gems ---
+
+# Subscribe to the agent's inverter stream over MQTT
 gem "mqtt", "~> 0.7.0"
-gem "chartkick", "~> 5.2"
 
+# Frontend, no Node bundler: Tailwind via the standalone CLI, Chart.js via
+# importmap, and Lucide icons rendered as inline SVG (https://lucide.dev/icons).
 gem "tailwindcss-rails", "~> 4.4"
-
-# Lucide icons rendered as inline SVG (no Node) — https://lucide.dev/icons
+gem "chartkick", "~> 5.2"
 gem "lucide-rails", "~> 0.7"

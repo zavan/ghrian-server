@@ -142,7 +142,7 @@ bin/rubocop        # rails-omakase style
 ## Docker
 
 Published to Docker Hub as
-[`zavan/ghrian-server`](https://hub.docker.com/r/zavan/ghrian-server) (multi-arch:
+[`felipezavan/ghrian-server`](https://hub.docker.com/r/felipezavan/ghrian-server) (multi-arch:
 amd64 + arm64). The image runs the **web** process by default (Thruster on `:80`,
 auto-running `db:prepare` on boot). The **MQTT listener** is the *same image* with
 the command overridden — run both on the same host so they share the SQLite volume.
@@ -159,12 +159,12 @@ docker run -d --name ghrian-web -p 80:80 \
   -e AR_ENCRYPTION_DETERMINISTIC_KEY=... \
   -e AR_ENCRYPTION_KEY_DERIVATION_SALT=... \
   -v ghrian-storage:/rails/storage \
-  zavan/ghrian-server
+  felipezavan/ghrian-server
 
 # listener — ingests MQTT; same image + volume + env, different command
 docker run -d --name ghrian-mqtt --env-file server.env \
   -v ghrian-storage:/rails/storage \
-  zavan/ghrian-server bin/mqtt-listener
+  felipezavan/ghrian-server bin/mqtt-listener
 ```
 
 The `AR_ENCRYPTION_*` keys encrypt any broker password you save, so keep them

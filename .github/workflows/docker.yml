@@ -10,7 +10,7 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  IMAGE: zavan/ghrian-server
+  IMAGE: felipezavan/ghrian-server
 
 jobs:
   build-push:

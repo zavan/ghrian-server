@@ -2,7 +2,7 @@
 service: ghrian-server
 
 # Name of the container image — the one published to Docker Hub.
-image: zavan/ghrian-server
+image: felipezavan/ghrian-server
 
 # Deploy to these servers.
 servers:
@@ -28,7 +28,7 @@ servers:
 registry:
   # Docker Hub (where the CI workflow publishes). Alternatives: ghcr.io / ...
   server: docker.io
-  username: zavan
+  username: felipezavan
 
   # Needed for authenticated registries.
   # username: your-user
