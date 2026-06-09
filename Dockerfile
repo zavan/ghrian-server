@@ -60,6 +60,11 @@ RUN SECRET_KEY_BASE_DUMMY=1 ./bin/rails assets:precompile
 # Final stage for app image
 FROM base
 
+LABEL org.opencontainers.image.title="ghrian-server" \
+      org.opencontainers.image.description="Ingests the ghrian MQTT inverter stream; dashboard + REST API" \
+      org.opencontainers.image.source="https://github.com/zavan/ghrian-server" \
+      org.opencontainers.image.licenses="MIT"
+
 # Run and own only the runtime files as a non-root user for security
 RUN groupadd --system --gid 1000 rails && \
     useradd rails --uid 1000 --gid 1000 --create-home --shell /bin/bash

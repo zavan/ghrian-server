@@ -139,6 +139,32 @@ bin/rails test     # minitest; ingestion is covered hermetically (no broker need
 bin/rubocop        # rails-omakase style
 ```
 
+## Docker
+
+Published to Docker Hub as
+[`zavan/ghrian-server`](https://hub.docker.com/r/zavan/ghrian-server) (multi-arch:
+amd64 + arm64). The image runs the **web** process by default (Thruster on `:80`,
+auto-running `db:prepare` on boot). The **MQTT listener** is the *same image* with
+the command overridden — run both on the same host so they share the SQLite volume:
+
+```bash
+# web — serves the dashboard + API and migrates the DB on boot (start this first)
+docker run -d --name ghrian-web -p 80:80 \
+  -e RAILS_MASTER_KEY=<contents of config/master.key> \
+  -v ghrian-storage:/rails/storage \
+  zavan/ghrian-server
+
+# listener — ingests MQTT; same image + volume, different command
+docker run -d --name ghrian-mqtt \
+  -e RAILS_MASTER_KEY=<contents of config/master.key> \
+  -v ghrian-storage:/rails/storage \
+  zavan/ghrian-server bin/mqtt-listener
+```
+
+`RAILS_MASTER_KEY` decrypts credentials (incl. the MQTT password + AR encryption
+keys) — keep it out of the image. Tags: `X.Y.Z` / `latest` from releases, `edge`
+tracks `main`.
+
 ## Production
 
 `Procfile` processes: `web` (Puma) and `mqtt` (`bin/mqtt-listener`). Deploy with
