@@ -1,0 +1,31 @@
+<% content_for :title, "MQTT connection" %>
+
+<div class="mb-6 flex items-center justify-between gap-4">
+  <h1 class="text-2xl font-semibold">MQTT connection</h1>
+  <%= link_to "Edit", edit_mqtt_config_path, class: "btn" %>
+</div>
+
+<section class="card">
+  <dl class="grid grid-cols-[repeat(auto-fill,minmax(220px,1fr))] gap-4">
+    <% [
+         ["Broker", content_tag(:code, @mqtt_config.broker_url)],
+         ["Base topic", content_tag(:code, @mqtt_config.base_topic)],
+         ["Subscribes to", content_tag(:code, @mqtt_config.subscribe_filter)],
+         ["Username", @mqtt_config.username.presence || "—"],
+         ["Password", @mqtt_config.password.present? ? "••••••••" : "—"],
+         ["Client ID", content_tag(:code, @mqtt_config.client_identifier)],
+         ["TLS", @mqtt_config.use_tls? ? "enabled" : "disabled"]
+       ].each do |label, value| %>
+      <div>
+        <dt class="text-xs uppercase tracking-wide text-slate-400"><%= label %></dt>
+        <dd class="mt-0.5"><%= value %></dd>
+      </div>
+    <% end %>
+  </dl>
+</section>
+
+<p class="text-slate-400">
+  The listener subscribes to <code><%= @mqtt_config.subscribe_filter %></code> and matches
+  each message to an inverter by its MQTT topic. Saving changes here reconnects the
+  running listener automatically.
+</p>

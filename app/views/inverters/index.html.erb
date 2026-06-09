@@ -1,0 +1,43 @@
+<% content_for :title, "Inverters" %>
+
+<div class="mb-6 flex items-center justify-between gap-4">
+  <h1 class="text-2xl font-semibold">Inverters</h1>
+  <%= link_to "Add inverter", new_inverter_path, class: "btn" %>
+</div>
+
+<% if @inverters.any? %>
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>MQTT topic</th>
+        <th>Model</th>
+        <th>Status</th>
+        <th>Last reading</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @inverters.each do |inverter| %>
+        <tr>
+          <td><%= link_to inverter.name, inverter, class: "text-sky-400 hover:text-sky-300" %></td>
+          <td><code><%= inverter.mqtt_topic %></code></td>
+          <td><%= inverter.device_model.presence || "—" %></td>
+          <td><span class="badge badge-<%= inverter.status %>"><%= inverter.status %></span></td>
+          <td><%= inverter.last_reading_at ? "#{time_ago_in_words(inverter.last_reading_at)} ago" : "—" %></td>
+          <td>
+            <div class="flex items-center gap-3">
+              <%= link_to "Edit", edit_inverter_path(inverter), class: "text-sky-400 hover:text-sky-300" %>
+              <%= button_to "Remove", inverter, method: :delete, class: "btn-danger",
+                    data: { turbo_confirm: "Remove #{inverter.name}? Its readings will be deleted." } %>
+            </div>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% else %>
+  <div class="rounded-xl border border-dashed border-slate-700 bg-slate-800 p-8 text-center text-slate-400">
+    <p>No inverters yet. Add one with the MQTT topic the agent publishes to.</p>
+  </div>
+<% end %>

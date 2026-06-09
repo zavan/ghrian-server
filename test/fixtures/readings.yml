@@ -1,0 +1,19 @@
+garage_old:
+  inverter: garage
+  recorded_at: <%= 2.hours.ago.to_fs(:db) %>
+  device_model: solis_s5-eh1p5k-l
+  data:
+    battery_soc:
+      value: 78
+      unit: "%"
+      label: Battery Capacity SOC
+
+garage_recent:
+  inverter: garage
+  recorded_at: <%= 1.hour.ago.to_fs(:db) %>
+  device_model: solis_s5-eh1p5k-l
+  data:
+    battery_soc:
+      value: 80
+      unit: "%"
+      label: Battery Capacity SOC

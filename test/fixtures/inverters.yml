@@ -1,0 +1,19 @@
+garage:
+  name: Garage
+  device_model: solis_s5-eh1p5k-l
+  mqtt_topic: solar/inverter/01
+  serial_number: SN001
+  status: 1
+  last_reading_at: <%= 1.hour.ago.to_fs(:db) %>
+  last_seen_at: <%= 1.hour.ago.to_fs(:db) %>
+  latest_values:
+    battery_soc:
+      value: 80
+      unit: "%"
+      label: Battery Capacity SOC
+
+shed:
+  name: Shed
+  device_model: solis_s5-eh1p5k-l
+  mqtt_topic: solar/inverter/02
+  status: 0

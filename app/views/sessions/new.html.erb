@@ -1,0 +1,31 @@
+<% content_for :title, "Sign in" %>
+
+<div class="mx-auto mt-10 max-w-sm">
+  <div class="card">
+    <h1 class="mb-1 text-xl font-semibold">Sign in to ghrian</h1>
+    <p class="mb-5 text-sm text-slate-400">Solar inverter monitoring.</p>
+
+    <%= form_with url: session_path, class: "space-y-4" do |form| %>
+      <div>
+        <%= form.label :email_address, "Email", class: "field-label" %>
+        <%= form.email_field :email_address, required: true, autofocus: true,
+              autocomplete: "username", value: params[:email_address], class: "field-input" %>
+      </div>
+      <div>
+        <%= form.label :password, class: "field-label" %>
+        <%= form.password_field :password, required: true, autocomplete: "current-password",
+              maxlength: 72, class: "field-input" %>
+      </div>
+      <%= form.submit "Sign in", class: "btn w-full" %>
+    <% end %>
+
+    <div class="mt-4 flex justify-between text-sm">
+      <% if registration_open? %>
+        <%= link_to "Create account", new_registration_path, class: "text-sky-400 hover:text-sky-300" %>
+      <% else %>
+        <span></span>
+      <% end %>
+      <%= link_to "Forgot password?", new_password_path, class: "text-slate-400 hover:text-slate-200" %>
+    </div>
+  </div>
+</div>

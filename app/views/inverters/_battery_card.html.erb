@@ -1,0 +1,27 @@
+<% soc = snapshot.soc %>
+<% pct = soc.to_f.clamp(0, 100) %>
+<% circ = (2 * Math::PI * 30).round(2) %>
+<% dash = (circ * pct / 100).round(2) %>
+
+<div class="rounded-xl border border-slate-700 bg-slate-800/50 p-5">
+  <p class="mb-3 text-sm text-slate-400">Battery</p>
+  <div class="flex items-center justify-between">
+    <div>
+      <p class="text-2xl font-semibold"><%= snapshot.battery_state %></p>
+      <p class="text-sm text-slate-400"><%= snapshot.battery.display %></p>
+    </div>
+    <div class="relative size-20">
+      <svg class="size-full -rotate-90" viewBox="0 0 72 72">
+        <circle cx="36" cy="36" r="30" fill="none" stroke="#334155" stroke-width="7" />
+        <% if soc %>
+          <circle cx="36" cy="36" r="30" fill="none" stroke="#22c55e" stroke-width="7"
+                  stroke-linecap="round" stroke-dasharray="<%= dash %> <%= circ %>" />
+        <% end %>
+      </svg>
+      <div class="absolute inset-0 flex flex-col items-center justify-center">
+        <span class="text-lg font-semibold"><%= soc ? "#{soc.round}%" : "—" %></span>
+        <span class="text-[10px] uppercase tracking-wide text-slate-400">SOC</span>
+      </div>
+    </div>
+  </div>
+</div>

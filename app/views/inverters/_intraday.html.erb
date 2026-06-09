@@ -1,0 +1,24 @@
+<%# Intraday chart (not broadcast — refreshes on page load). Power series in kW for
+    PV/Grid/Load/Battery, plus battery SOC (%) on a separate strip. Defaults to today;
+    the inverter page passes the selected date. %>
+<% series = inverter.intraday_series(date: local_assigns.fetch(:date, Date.current)) %>
+<% has_data = series[:power].any? { |s| s[:data].any? } || series[:soc].first[:data].any? %>
+
+<div>
+  <p class="mb-3 text-sm text-slate-400">Today — power &amp; battery</p>
+  <% if has_data %>
+    <%= line_chart series[:power],
+          ytitle: "kW", colors: ["#eab308", "#38bdf8", "#a855f7", "#22c55e"],
+          height: "260px", points: false, curve: false,
+          library: { interaction: { mode: "index", intersect: false },
+                     elements: { line: { borderWidth: 1.5 } } } %>
+
+    <%= line_chart series[:soc],
+          ytitle: "SOC %", colors: ["#22c55e"], min: 0, max: 100,
+          height: "120px", points: false, curve: false %>
+  <% else %>
+    <p class="rounded-lg border border-dashed border-slate-700 p-6 text-center text-sm text-slate-400">
+      No readings yet today. The chart fills in as the agent publishes data.
+    </p>
+  <% end %>
+</div>

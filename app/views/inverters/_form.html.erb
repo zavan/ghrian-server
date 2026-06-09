@@ -1,0 +1,38 @@
+<%= form_with model: inverter, class: "max-w-xl" do |form| %>
+  <% if inverter.errors.any? %>
+    <div class="mb-4 rounded-xl border border-red-500 bg-red-500/15 px-4 py-3 text-red-200">
+      <%= pluralize(inverter.errors.count, "error") %> prevented saving:
+      <ul class="ml-5 list-disc">
+        <% inverter.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="mb-4">
+    <%= form.label :name, class: "field-label" %>
+    <%= form.text_field :name, autofocus: true, placeholder: "Garage", class: "field-input" %>
+  </div>
+
+  <div class="mb-4">
+    <%= form.label :mqtt_topic, "MQTT topic", class: "field-label" %>
+    <%= form.text_field :mqtt_topic, placeholder: "solar/inverter/01", class: "field-input" %>
+    <small class="mt-1.5 block text-slate-400">The agent's base topic. The retained <code>&lt;topic&gt;/availability</code> is derived from it.</small>
+  </div>
+
+  <div class="mb-4">
+    <%= form.label :device_model, "Device model", class: "field-label" %>
+    <%= form.text_field :device_model, placeholder: "solis_s5-eh1p5k-l (auto-filled from readings)", class: "field-input" %>
+  </div>
+
+  <div class="mb-4">
+    <%= form.label :serial_number, "Serial number", class: "field-label" %>
+    <%= form.text_field :serial_number, class: "field-input" %>
+  </div>
+
+  <div class="mt-5 flex items-center gap-4">
+    <%= form.submit class: "btn" %>
+    <%= link_to "Cancel", inverters_path, class: "btn-link" %>
+  </div>
+<% end %>

@@ -1,0 +1,7 @@
+#!/usr/bin/env ruby
+# Boots the Rails environment and runs the MQTT subscriber loop. Started by
+# Procfile.dev (`bin/dev`) alongside the web server, and suitable for a production
+# process manager (Kamal/systemd). See app/models/mqtt/listener.rb.
+require_relative "../config/environment"
+
+Mqtt::Listener.new.run

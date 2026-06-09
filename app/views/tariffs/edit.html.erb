@@ -1,0 +1,35 @@
+<% content_for :title, "Edit tariff" %>
+
+<h1 class="mb-6 text-2xl font-semibold">Edit tariff</h1>
+
+<%= form_with model: @tariff, url: tariff_path, method: :patch, class: "max-w-xl" do |form| %>
+  <% if @tariff.errors.any? %>
+    <div class="mb-4 rounded-xl border border-red-500 bg-red-500/15 px-4 py-3 text-red-200">
+      <%= @tariff.errors.full_messages.to_sentence %>
+    </div>
+  <% end %>
+
+  <div class="mb-4">
+    <%= form.label :currency, class: "field-label" %>
+    <%= form.text_field :currency, placeholder: "$", class: "field-input max-w-[8rem]" %>
+    <small class="mt-1.5 block text-slate-400">Symbol or code shown before amounts (e.g. <code>$</code>, <code>€</code>, <code>R$</code>).</small>
+  </div>
+
+  <div class="mb-4 flex gap-4">
+    <div class="flex-1">
+      <%= form.label :import_rate, "Import rate (per kWh)", class: "field-label" %>
+      <%= form.number_field :import_rate, step: "0.0001", min: 0, class: "field-input" %>
+      <small class="mt-1.5 block text-slate-400">What you pay to draw from the grid.</small>
+    </div>
+    <div class="flex-1">
+      <%= form.label :export_rate, "Export rate (per kWh)", class: "field-label" %>
+      <%= form.number_field :export_rate, step: "0.0001", min: 0, class: "field-input" %>
+      <small class="mt-1.5 block text-slate-400">Feed-in tariff you earn for exporting.</small>
+    </div>
+  </div>
+
+  <div class="mt-5 flex items-center gap-4">
+    <%= form.submit "Save", class: "btn" %>
+    <%= link_to "Cancel", tariff_path, class: "btn-link" %>
+  </div>
+<% end %>

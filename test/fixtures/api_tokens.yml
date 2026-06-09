@@ -1,0 +1,10 @@
+macos:
+  user: one
+  name: macOS app
+  token: tok_test_macos_0001
+  last_used_at: <%= 2.hours.ago.to_fs(:db) %>
+
+cli:
+  user: two
+  name: CLI
+  token: tok_test_cli_0002

@@ -1,0 +1,18 @@
+<div class="rounded-xl border border-slate-700 bg-slate-800/50 p-5">
+  <p class="mb-4 text-sm text-slate-400">Today</p>
+  <div class="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
+    <% [
+         ["Daily Yield", snapshot.daily_yield],
+         ["Daily Charge", snapshot.daily_charge],
+         ["Daily Discharge", snapshot.daily_discharge],
+         ["To Grid", snapshot.to_grid_energy],
+         ["From Grid", snapshot.from_grid_energy],
+         ["Consumption", snapshot.consumption_energy]
+       ].each do |label, value| %>
+      <div>
+        <p class="text-xl font-semibold"><%= Inverter::Snapshot.kwh(value) %></p>
+        <p class="text-xs uppercase tracking-wide text-slate-400"><%= label %></p>
+      </div>
+    <% end %>
+  </div>
+</div>

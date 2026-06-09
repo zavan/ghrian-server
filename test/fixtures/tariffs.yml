@@ -1,0 +1,4 @@
+default:
+  import_rate: 0.30
+  export_rate: 0.10
+  currency: "$"

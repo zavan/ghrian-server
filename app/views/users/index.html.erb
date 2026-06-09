@@ -1,0 +1,55 @@
+<% content_for :title, "Users" %>
+
+<h1 class="mb-6 text-2xl font-semibold">Users</h1>
+
+<section class="card">
+  <p class="mb-4 text-slate-400">
+    Public sign-up is closed. Create accounts here for anyone who should have access —
+    every account is an admin of this installation.
+  </p>
+
+  <%= form_with model: @user, url: users_path, class: "max-w-xl" do |form| %>
+    <% if @user.errors.any? %>
+      <div class="mb-4 rounded-xl border border-red-500 bg-red-500/15 px-4 py-3 text-sm text-red-200">
+        <%= @user.errors.full_messages.to_sentence %>
+      </div>
+    <% end %>
+
+    <div class="mb-4">
+      <%= form.label :email_address, "Email", class: "field-label" %>
+      <%= form.email_field :email_address, autocomplete: "off", class: "field-input" %>
+    </div>
+    <div class="mb-4 flex gap-4">
+      <div class="flex-1">
+        <%= form.label :password, class: "field-label" %>
+        <%= form.password_field :password, autocomplete: "new-password", class: "field-input" %>
+      </div>
+      <div class="flex-1">
+        <%= form.label :password_confirmation, "Confirm password", class: "field-label" %>
+        <%= form.password_field :password_confirmation, autocomplete: "new-password", class: "field-input" %>
+      </div>
+    </div>
+    <%= form.submit "Create account", class: "btn" %>
+  <% end %>
+</section>
+
+<table class="data-table">
+  <thead><tr><th>Email</th><th>Added</th><th></th></tr></thead>
+  <tbody>
+    <% @users.each do |user| %>
+      <tr>
+        <td>
+          <%= user.email_address %>
+          <% if user == Current.user %><span class="ml-1 text-xs text-slate-500">(you)</span><% end %>
+        </td>
+        <td><%= user.created_at.to_date.to_fs(:long) %></td>
+        <td>
+          <% unless user == Current.user %>
+            <%= button_to "Remove", user, method: :delete, class: "btn-danger",
+                  data: { turbo_confirm: "Remove #{user.email_address}? Their sessions and API tokens are revoked." } %>
+          <% end %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

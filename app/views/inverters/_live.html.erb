@@ -1,0 +1,33 @@
+<%# Live region of an inverter panel — re-broadcast by Inverter#broadcast_tile on
+    each reading. Root id must match the broadcast target: dom_id(inverter, :live). %>
+<% snapshot = inverter.snapshot %>
+<div id="<%= dom_id(inverter, :live) %>" class="space-y-6">
+  <div class="flex items-start justify-between gap-4">
+    <div>
+      <h2 class="text-xl font-semibold">
+        <%= link_to inverter.name, inverter, class: "hover:text-sky-300" %>
+      </h2>
+      <p class="text-sm text-slate-400">
+        <% if inverter.last_reading_at %>
+          Updated <%= time_ago_in_words(inverter.last_reading_at) %> ago
+        <% else %>
+          No readings yet
+        <% end %>
+        <% if snapshot.temperature %> · <%= snapshot.temperature %> °C<% end %>
+      </p>
+    </div>
+    <span class="badge badge-<%= inverter.status %>"><%= inverter.status %></span>
+  </div>
+
+  <div class="grid gap-6 lg:grid-cols-2">
+    <div class="flex items-center justify-center rounded-xl border border-slate-700 bg-slate-800/50 p-5">
+      <%= render "inverters/power_flow", inverter: inverter, snapshot: snapshot %>
+    </div>
+    <div class="space-y-6">
+      <%= render "inverters/battery_card", snapshot: snapshot %>
+      <%= render "inverters/self_consumption", snapshot: snapshot %>
+    </div>
+  </div>
+
+  <%= render "inverters/today_energy", snapshot: snapshot %>
+</div>

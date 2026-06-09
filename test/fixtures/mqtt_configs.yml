@@ -1,0 +1,9 @@
+# Singleton broker settings. Password omitted on purpose: the column is encrypted,
+# and fixtures bypass encryption, so a plaintext value here would fail to decrypt.
+primary:
+  host: localhost
+  port: 1883
+  username: ""
+  client_id: ""
+  base_topic: solar
+  use_tls: false

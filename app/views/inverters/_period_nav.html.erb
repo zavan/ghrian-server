@@ -1,0 +1,19 @@
+<%# Period tabs + date navigation. Locals: `summary` (EnergySummary), `link` (a
+    lambda (period, date) -> url, so the dashboard and inverter pages can target
+    their own routes/frames). %>
+<div class="mb-5 flex flex-wrap items-center gap-2">
+  <% %w[day month year lifetime].each do |tab| %>
+    <%= link_to tab.capitalize, link.call(tab, summary.date),
+          class: "rounded-lg px-3 py-1.5 text-sm font-medium #{tab == summary.period ? 'bg-sky-400 text-sky-950' : 'text-slate-400 hover:text-slate-100'}" %>
+  <% end %>
+
+  <% if summary.navigable? %>
+    <div class="ml-auto flex items-center gap-3 text-sm">
+      <%= link_to "‹", link.call(summary.period, summary.prev_date), class: "text-slate-400 hover:text-slate-100" %>
+      <span class="min-w-32 text-center font-medium"><%= summary.label %></span>
+      <%= link_to "›", link.call(summary.period, summary.next_date), class: "text-slate-400 hover:text-slate-100" %>
+    </div>
+  <% else %>
+    <span class="ml-auto text-sm font-medium text-slate-400"><%= summary.label %></span>
+  <% end %>
+</div>

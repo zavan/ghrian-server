@@ -1,0 +1,23 @@
+<% content_for :title, "Dashboard" %>
+
+<%# Subscribe to live updates broadcast by Inverter#broadcast_tile. %>
+<%= turbo_stream_from Broadcastable::DASHBOARD_STREAM %>
+
+<div class="mb-6 flex items-center justify-between gap-4">
+  <h1 class="text-2xl font-semibold">Dashboard</h1>
+  <%= link_to "Add inverter", new_inverter_path, class: "btn" %>
+</div>
+
+<% if @inverters.any? %>
+  <%= turbo_frame_tag "dashboard_aggregates" do %>
+    <%= render "dashboards/summary", summary: @summary, tariff: @tariff %>
+  <% end %>
+
+  <%= render partial: "inverters/panel", collection: @inverters, as: :inverter %>
+<% else %>
+  <div class="rounded-xl border border-dashed border-slate-700 bg-slate-800 p-8 text-center text-slate-400">
+    <p>No inverters yet.</p>
+    <p class="mt-1">Add one with the MQTT topic the agent publishes to (e.g. <code>solar/inverter/01</code>).</p>
+    <%= link_to "Add your first inverter", new_inverter_path, class: "btn mt-3" %>
+  </div>
+<% end %>

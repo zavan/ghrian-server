@@ -1,0 +1,59 @@
+<% content_for :title, "Edit MQTT connection" %>
+
+<h1 class="mb-6 text-2xl font-semibold">Edit MQTT connection</h1>
+
+<%= form_with model: @mqtt_config, url: mqtt_config_path, method: :patch, class: "max-w-xl" do |form| %>
+  <% if @mqtt_config.errors.any? %>
+    <div class="mb-4 rounded-xl border border-red-500 bg-red-500/15 px-4 py-3 text-red-200">
+      <%= pluralize(@mqtt_config.errors.count, "error") %> prevented saving:
+      <ul class="ml-5 list-disc">
+        <% @mqtt_config.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="mb-4 flex gap-4">
+    <div class="flex-1">
+      <%= form.label :host, class: "field-label" %>
+      <%= form.text_field :host, placeholder: "localhost", class: "field-input" %>
+    </div>
+    <div class="w-28">
+      <%= form.label :port, class: "field-label" %>
+      <%= form.number_field :port, class: "field-input" %>
+    </div>
+  </div>
+
+  <div class="mb-4">
+    <%= form.label :base_topic, "Base topic", class: "field-label" %>
+    <%= form.text_field :base_topic, placeholder: "solar", class: "field-input" %>
+    <small class="mt-1.5 block text-slate-400">The listener subscribes to <code>&lt;base_topic&gt;/#</code>.</small>
+  </div>
+
+  <div class="mb-4 flex gap-4">
+    <div class="flex-1">
+      <%= form.label :username, class: "field-label" %>
+      <%= form.text_field :username, autocomplete: "off", class: "field-input" %>
+    </div>
+    <div class="flex-1">
+      <%= form.label :password, class: "field-label" %>
+      <%= form.password_field :password, autocomplete: "new-password", placeholder: "(leave blank to keep current)", class: "field-input" %>
+    </div>
+  </div>
+
+  <div class="mb-4">
+    <%= form.label :client_id, "Client ID", class: "field-label" %>
+    <%= form.text_field :client_id, placeholder: "ghrian-server", class: "field-input" %>
+  </div>
+
+  <div class="mb-4 flex items-center gap-2">
+    <%= form.check_box :use_tls, class: "size-4 rounded border-slate-600 bg-slate-700" %>
+    <%= form.label :use_tls, "Use TLS (mqtts)", class: "text-sm text-slate-300" %>
+  </div>
+
+  <div class="mt-5 flex items-center gap-4">
+    <%= form.submit "Save", class: "btn" %>
+    <%= link_to "Cancel", mqtt_config_path, class: "btn-link" %>
+  </div>
+<% end %>

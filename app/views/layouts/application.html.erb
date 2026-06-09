@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= content_for(:title) || "ghrian" %></title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="application-name" content="ghrian">
+    <meta name="apple-mobile-web-app-title" content="ghrian">
+    <meta name="theme-color" content="#0f172a">
+    <meta name="mobile-web-app-capable" content="yes">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= yield :head %>
+
+    <%# PWA manifest — makes the dashboard installable. %>
+    <%= tag.link rel: "manifest", href: pwa_manifest_path %>
+
+    <link rel="icon" href="/icon.png" type="image/png">
+    <link rel="icon" href="/icon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="/icon.png">
+
+    <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
+  </head>
+
+  <body class="min-h-screen bg-slate-900 text-slate-200 antialiased">
+    <% if authenticated? %>
+      <header class="flex items-center gap-6 border-b border-slate-700 bg-slate-800 px-6 py-3">
+        <a href="<%= root_path %>" class="text-lg font-bold text-slate-100">☀︎ ghrian</a>
+        <nav class="flex flex-1 gap-5 text-sm">
+          <%= link_to "Dashboard", root_path, class: "text-slate-400 hover:text-slate-100" %>
+          <%= link_to "Inverters", inverters_path, class: "text-slate-400 hover:text-slate-100" %>
+          <%= link_to "MQTT", mqtt_config_path, class: "text-slate-400 hover:text-slate-100" %>
+          <%= link_to "Costs", tariff_path, class: "text-slate-400 hover:text-slate-100" %>
+          <%= link_to "API Tokens", api_tokens_path, class: "text-slate-400 hover:text-slate-100" %>
+          <%= link_to "Users", users_path, class: "text-slate-400 hover:text-slate-100" %>
+        </nav>
+        <%= button_to "Sign out", session_path, method: :delete,
+              class: "text-sm text-sky-400 hover:text-sky-300" %>
+      </header>
+    <% end %>
+
+    <main class="mx-auto max-w-5xl p-6">
+      <% flash.each do |type, message| %>
+        <div class="mb-4 rounded-xl border px-4 py-3 <%= flash_classes(type) %>"><%= message %></div>
+      <% end %>
+
+      <%= yield %>
+    </main>
+  </body>
+</html>

@@ -1,0 +1,55 @@
+<% content_for :title, @inverter.name %>
+<% snapshot = @inverter.snapshot %>
+
+<div class="mb-6 flex items-center justify-between gap-4">
+  <h1 class="flex items-center gap-3 text-2xl font-semibold">
+    <%= @inverter.name %>
+    <span class="badge badge-<%= @inverter.status %>"><%= @inverter.status %></span>
+  </h1>
+  <div class="flex items-center gap-4">
+    <%= link_to "Dashboard", root_path, class: "btn-link" %>
+    <%= link_to "Edit", edit_inverter_path(@inverter), class: "btn" %>
+  </div>
+</div>
+
+<%# Current snapshot strip %>
+<section class="card">
+  <div class="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
+    <% [
+         ["PV", snapshot.pv.display, "text-yellow-400"],
+         [snapshot.grid.label, snapshot.grid.display, "text-sky-400"],
+         ["Battery", snapshot.battery.display, "text-green-400"],
+         ["SOC", snapshot.soc ? "#{snapshot.soc.round}%" : "—", "text-green-400"],
+         ["Load", snapshot.load.display, "text-purple-400"]
+       ].each do |label, value, color| %>
+      <div>
+        <p class="text-xs uppercase tracking-wide text-slate-400"><%= label %></p>
+        <p class="text-lg font-semibold <%= color %>"><%= value %></p>
+      </div>
+    <% end %>
+  </div>
+</section>
+
+<%= turbo_frame_tag "aggregates" do %>
+  <%= render "aggregates", inverter: @inverter, summary: @summary, tariff: @tariff %>
+<% end %>
+
+<section class="card">
+  <h2 class="mb-3 text-lg font-semibold">Latest values</h2>
+  <% if @inverter.latest_values.present? %>
+    <table class="data-table">
+      <thead><tr><th>Metric</th><th>Value</th><th>Unit</th></tr></thead>
+      <tbody>
+        <% @inverter.latest_values.sort.each do |key, entry| %>
+          <tr>
+            <td><%= entry["label"].presence || key %></td>
+            <td><%= Array(entry["value"]).join(", ") %></td>
+            <td><%= entry["unit"] %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  <% else %>
+    <p class="text-slate-400">No readings received yet.</p>
+  <% end %>
+</section>
