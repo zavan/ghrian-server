@@ -10,11 +10,13 @@
         <%= form.email_field :email_address, required: true, autofocus: true,
               autocomplete: "username", value: params[:email_address], class: "field-input" %>
       </div>
-      <%= form.submit "Email reset instructions", class: "btn w-full" %>
+      <%= button_tag type: "submit", class: "btn w-full justify-center" do %>
+        <%= lucide_icon "mail", class: "size-4" %>Email reset instructions
+      <% end %>
     <% end %>
 
     <div class="mt-4 text-sm">
-      <%= link_to "Back to sign in", new_session_path, class: "text-slate-400 hover:text-slate-200" %>
+      <%= link_to "Back to sign in", new_session_path, class: "text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200" %>
     </div>
   </div>
 </div>

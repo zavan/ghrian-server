@@ -14,7 +14,7 @@ class InverterTest < ActiveSupport::TestCase
   test "ingest data message creates a reading and refreshes the snapshot" do
     inverter = inverters(:shed) # starts offline, no readings
 
-    reading = Inverter.ingest(topic: "solar/inverter/02", payload: SAMPLE.to_json)
+    reading = Inverter.ingest(topic: "ghrian/inverter/02", payload: SAMPLE.to_json)
 
     assert_not_nil reading
     assert_equal inverter, reading.inverter
@@ -31,26 +31,33 @@ class InverterTest < ActiveSupport::TestCase
   end
 
   test "ingest accepts an already-decoded hash payload" do
-    reading = Inverter.ingest(topic: "solar/inverter/02",
+    reading = Inverter.ingest(topic: "ghrian/inverter/02",
       payload: { "values" => { "battery_soc" => { "value" => 50 } } })
     assert_equal 50, reading.value_for("battery_soc")
+  end
+
+  test "a redelivered message (same inverter + timestamp) is stored only once" do
+    # QoS 1 is at-least-once, so the broker may redeliver. Same timestamp => one row.
+    assert_difference -> { Reading.count }, 1 do
+      2.times { Inverter.ingest(topic: "ghrian/inverter/02", payload: SAMPLE.to_json) }
+    end
   end
 
   test "availability message flips status without creating a reading" do
     inverter = inverters(:garage)
 
     assert_no_difference -> { inverter.readings.count } do
-      Inverter.ingest(topic: "solar/inverter/01/availability", payload: "offline")
+      Inverter.ingest(topic: "ghrian/inverter/01/availability", payload: "offline")
     end
     assert_equal "offline", inverter.reload.status
 
-    Inverter.ingest(topic: "solar/inverter/01/availability", payload: "ONLINE\n")
+    Inverter.ingest(topic: "ghrian/inverter/01/availability", payload: "ONLINE\n")
     assert_equal "online", inverter.reload.status
   end
 
   test "unknown topics are ignored" do
-    assert_nil Inverter.ingest(topic: "solar/unknown", payload: "{}")
-    assert_nil Inverter.ingest(topic: "solar/unknown/availability", payload: "online")
+    assert_nil Inverter.ingest(topic: "ghrian/unknown", payload: "{}")
+    assert_nil Inverter.ingest(topic: "ghrian/unknown/availability", payload: "online")
   end
 
   test "invalid JSON is tolerated" do
@@ -58,7 +65,7 @@ class InverterTest < ActiveSupport::TestCase
   end
 
   test "availability_topic derives from mqtt_topic" do
-    assert_equal "solar/inverter/01/availability", inverters(:garage).availability_topic
+    assert_equal "ghrian/inverter/01/availability", inverters(:garage).availability_topic
   end
 
   test "requires name and a unique mqtt_topic" do

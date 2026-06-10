@@ -2,10 +2,10 @@
     with animated connectors whose direction reflects energy flow. %>
 <% snapshot ||= inverter.snapshot %>
 <% nodes = {
-     pv:      { name: "PV",      flow: snapshot.pv,      x: 22, y: 26, ring: "border-yellow-400", text: "text-yellow-400", stroke: "#eab308" },
-     grid:    { name: "Grid",    flow: snapshot.grid,    x: 78, y: 26, ring: "border-sky-500",    text: "text-sky-400",    stroke: "#38bdf8" },
-     battery: { name: "Battery", flow: snapshot.battery, x: 22, y: 74, ring: "border-green-500",  text: "text-green-400",  stroke: "#22c55e" },
-     load:    { name: "Load",    flow: snapshot.load,    x: 78, y: 74, ring: "border-purple-500", text: "text-purple-400", stroke: "#a855f7" }
+     pv:      { name: "PV",      flow: snapshot.pv,      x: 22, y: 26, ring: "border-yellow-500 dark:border-yellow-400", text: "text-yellow-600 dark:text-yellow-400", stroke: "#eab308" },
+     grid:    { name: "Grid",    flow: snapshot.grid,    x: 78, y: 26, ring: "border-sky-500",    text: "text-sky-600 dark:text-sky-400",    stroke: "#38bdf8" },
+     battery: { name: "Battery", flow: snapshot.battery, x: 22, y: 74, ring: "border-green-500",  text: "text-green-600 dark:text-green-400",  stroke: "#22c55e" },
+     load:    { name: "Load",    flow: snapshot.load,    x: 78, y: 74, ring: "border-purple-500", text: "text-purple-600 dark:text-purple-400", stroke: "#a855f7" }
    } %>
 
 <div class="relative mx-auto aspect-square w-full max-w-sm">
@@ -18,7 +18,7 @@
   </svg>
 
   <%# Central inverter hub %>
-  <div class="absolute left-1/2 top-1/2 flex size-16 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border-2 border-amber-500 bg-slate-900 text-amber-400 shadow-lg">
+  <div class="absolute left-1/2 top-1/2 flex size-16 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border-2 border-amber-500 bg-white text-amber-600 shadow-lg dark:bg-slate-900 dark:text-amber-400">
     <%= power_icon :inverter, size: 28 %>
   </div>
 
@@ -28,7 +28,7 @@
       <span class="<%= node[:text] %>"><%= power_icon key %></span>
       <span class="flow-node-value"><%= flow.display %></span>
     </div>
-    <span class="absolute -translate-x-1/2 text-xs text-slate-400"
+    <span class="absolute -translate-x-1/2 text-xs text-slate-500 dark:text-slate-400"
           style="left: <%= node[:x] %>%; top: calc(<%= node[:y] %>% + 2.85rem);"><%= node[:name] %></span>
   <% end %>
 </div>

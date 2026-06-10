@@ -39,7 +39,8 @@ module Mqtt
         client = MQTT::Client.connect(connect_options(config))
         monitor = start_monitor(client, config)
         begin
-          client.subscribe(config.subscribe_filter => 0)
+          # QoS 1: live availability transitions (online/offline) must not be dropped.
+          client.subscribe(config.subscribe_filter => 1)
           @logger.info("[mqtt] connected; waiting for messages")
           client.get { |topic, message| dispatch(topic, message) }
         rescue MQTT::Exception, IOError, SystemCallError

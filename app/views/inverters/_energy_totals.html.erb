@@ -1,16 +1,16 @@
 <%# Shared energy totals grid. Local: `totals` (Inverter::EnergyTotals). %>
 <div class="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
   <% [
-       ["Generation", totals.generation, "text-yellow-400"],
-       ["Self-consumed", totals.self_consumption, "text-purple-400"],
-       ["Exported", totals.feed_in, "text-sky-400"],
-       ["Imported", totals.import, "text-red-400"],
-       ["Charged", totals.charge, "text-green-400"],
-       ["Discharged", totals.discharge, "text-green-400"]
+       ["Generation", totals.generation, "text-yellow-600 dark:text-yellow-400"],
+       ["Self-consumed", totals.self_consumption, "text-purple-600 dark:text-purple-400"],
+       ["Exported", totals.feed_in, "text-sky-600 dark:text-sky-400"],
+       ["Imported", totals.import, "text-red-600 dark:text-red-400"],
+       ["Charged", totals.charge, "text-green-600 dark:text-green-400"],
+       ["Discharged", totals.discharge, "text-green-600 dark:text-green-400"]
      ].each do |name, value, color| %>
     <div>
       <p class="text-xl font-semibold <%= color %>"><%= Inverter::Snapshot.kwh(value) %></p>
-      <p class="text-xs uppercase tracking-wide text-slate-400"><%= name %></p>
+      <p class="text-xs uppercase tracking-wide text-slate-500 dark:text-slate-400"><%= name %></p>
     </div>
   <% end %>
 </div>

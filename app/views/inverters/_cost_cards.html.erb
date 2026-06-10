@@ -3,21 +3,21 @@
   <% net = totals.net(tariff) %>
   <div class="grid grid-cols-2 gap-4 lg:grid-cols-4">
     <% [
-         ["Import cost", tariff.format(totals.import_cost(tariff)), "text-red-400", "drawn from grid"],
-         ["Export earnings", tariff.format(totals.export_earnings(tariff)), "text-sky-400", "fed to grid"],
-         ["Net", tariff.format(net), net.negative? ? "text-red-400" : "text-green-400", "earnings − cost"],
-         ["Self-consumption savings", tariff.format(totals.savings(tariff)), "text-green-400", "avoided imports"]
+         ["Import cost", tariff.format(totals.import_cost(tariff)), "text-red-600 dark:text-red-400", "drawn from grid"],
+         ["Export earnings", tariff.format(totals.export_earnings(tariff)), "text-sky-600 dark:text-sky-400", "fed to grid"],
+         ["Net", tariff.format(net), net.negative? ? "text-red-600 dark:text-red-400" : "text-green-600 dark:text-green-400", "earnings − cost"],
+         ["Self-consumption savings", tariff.format(totals.savings(tariff)), "text-green-600 dark:text-green-400", "avoided imports"]
        ].each do |name, value, color, hint| %>
-      <div class="rounded-xl border border-slate-700 bg-slate-800/50 p-4">
-        <p class="text-xs uppercase tracking-wide text-slate-400"><%= name %></p>
+      <div class="rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-slate-800/50 p-4">
+        <p class="text-xs uppercase tracking-wide text-slate-500 dark:text-slate-400"><%= name %></p>
         <p class="mt-1 text-2xl font-semibold <%= color %>"><%= value %></p>
-        <p class="text-xs text-slate-500"><%= hint %></p>
+        <p class="text-xs text-slate-400 dark:text-slate-500"><%= hint %></p>
       </div>
     <% end %>
   </div>
 <% else %>
-  <p class="text-sm text-slate-400">
-    Set your <%= link_to "import & export rates", edit_tariff_path, class: "text-sky-400 hover:text-sky-300" %>
+  <p class="text-sm text-slate-500 dark:text-slate-400">
+    Set your <%= link_to "import & export rates", edit_tariff_path, class: "text-sky-600 dark:text-sky-400 hover:text-sky-700 dark:hover:text-sky-300" %>
     to see cost, earnings, and savings.
   </p>
 <% end %>

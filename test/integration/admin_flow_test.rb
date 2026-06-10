@@ -26,6 +26,18 @@ class AdminFlowTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
+  test "topbar exposes the theme toggle and the no-flash theme script" do
+    sign_in_as users(:one)
+
+    get root_url
+    assert_response :success
+    # The toggle button wired to the Stimulus theme controller.
+    assert_select "button[data-controller='theme'][data-action='theme#toggle']"
+    # The inline script that applies the saved/OS theme before first paint.
+    assert_includes response.body, 'localStorage.getItem("theme")'
+    assert_includes response.body, 'classList.toggle("dark"'
+  end
+
   test "inverter page renders every aggregate period" do
     sign_in_as users(:one)
 
@@ -77,7 +89,7 @@ class AdminFlowTest < ActionDispatch::IntegrationTest
     sign_in_as users(:one)
 
     assert_difference -> { Inverter.count }, 1 do
-      post inverters_url, params: { inverter: { name: "Loft", mqtt_topic: "solar/inverter/99" } }
+      post inverters_url, params: { inverter: { name: "Loft", mqtt_topic: "ghrian/inverter/99" } }
     end
     assert_redirected_to inverters_url
 
@@ -85,6 +97,19 @@ class AdminFlowTest < ActionDispatch::IntegrationTest
       post api_tokens_url, params: { api_token: { name: "macOS app" } }
     end
     assert_redirected_to api_tokens_url
+
+    # The plaintext is revealed exactly once, on the page we land on after creating
+    # (it can't be read back off the record — only its digest is stored).
+    follow_redirect!
+    assert_response :success
+    revealed = css_select("[data-controller=clipboard] [data-clipboard-target=source]").first.text.strip
+    assert revealed.start_with?("ghr_")
+
+    # Reloading the list no longer exposes the secret — only its prefix.
+    get api_tokens_url
+    assert_response :success
+    assert_no_match(/#{Regexp.escape(revealed)}/, response.body)
+    assert_select "code", text: /#{Regexp.escape(ApiToken.last.token_prefix)}…/
   end
 
   test "the first account can register, after which registration closes" do

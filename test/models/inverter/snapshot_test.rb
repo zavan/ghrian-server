@@ -34,6 +34,25 @@ class Inverter::SnapshotTest < ActiveSupport::TestCase
     assert_equal "Importing", s.grid_state
   end
 
+  test "grid prefers the meter reading over the inverter grid-port power" do
+    # On battery at night: the inverter feeds the house through its grid port
+    # (port ≈ load), but the external meter shows ~0 net grid. Trust the meter.
+    s = snapshot(
+      "meter_active_power" => metric(0),
+      "inverter_ac_grid_port_power" => metric(256),
+      "household_load_power" => metric(256)
+    )
+    assert_equal :idle, s.grid.direction
+    assert_equal "0.0 kW", s.grid.display
+    assert_equal "Idle", s.grid_state
+  end
+
+  test "grid falls back to the inverter grid-port power when no meter is reported" do
+    s = snapshot("inverter_ac_grid_port_power" => metric(-500))
+    assert_equal(-0.5, s.grid.watts / 1000.0)
+    assert_equal :in, s.grid.direction
+  end
+
   test "battery charging vs discharging from current_direction" do
     charging = snapshot("battery_power" => metric(800), "battery_current_direction" => metric(0))
     assert_equal :out, charging.battery.direction

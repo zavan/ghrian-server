@@ -50,4 +50,11 @@ Rails.application.configure do
 
   # Raise error when a before_action's only/except options reference missing actions.
   config.action_controller.raise_on_missing_callback_actions = true
+
+  # Deterministic throwaway Active Record Encryption keys, so tests that exercise
+  # `encrypts` (e.g. MqttConfig#password) run without a master.key / credentials —
+  # in CI and on a fresh clone. These protect no real data.
+  config.active_record.encryption.primary_key = "test_ar_encryption_primary_key_0000000000"
+  config.active_record.encryption.deterministic_key = "test_ar_encryption_deterministic_key_0000"
+  config.active_record.encryption.key_derivation_salt = "test_ar_encryption_key_derivation_salt_00"
 end

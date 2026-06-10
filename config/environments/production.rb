@@ -24,14 +24,16 @@ Rails.application.configure do
   # Store uploaded files on the local file system (see config/storage.yml for options).
   config.active_storage.service = :local
 
-  # Assume all access to the app is happening through a SSL-terminating reverse proxy.
-  # config.assume_ssl = true
-
-  # Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies.
-  # config.force_ssl = true
+  # SSL handling is env-driven so the same image works both ways: the compose
+  # quickstart serves plain http://localhost:3000 (both unset), while a deploy
+  # behind a TLS-terminating reverse proxy sets ASSUME_SSL=true (so Rails honors
+  # X-Forwarded-Proto for correct URL scheme + secure cookies). Set FORCE_SSL=true
+  # only if the proxy isn't already redirecting http->https.
+  config.assume_ssl = ENV["ASSUME_SSL"] == "true"
+  config.force_ssl = ENV["FORCE_SSL"] == "true"
 
   # Skip http-to-https redirect for the default health check endpoint.
-  # config.ssl_options = { redirect: { exclude: ->(request) { request.path == "/up" } } }
+  config.ssl_options = { redirect: { exclude: ->(request) { request.path == "/up" } } }
 
   # Log to STDOUT with the current request id as a default log tag.
   config.log_tags = [ :request_id ]

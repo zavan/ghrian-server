@@ -8,18 +8,18 @@
 
   <%= render "inverters/energy_totals", totals: totals %>
 
-  <div class="mt-5 border-t border-slate-700 pt-5">
+  <div class="mt-5 border-t border-slate-200 dark:border-slate-700 pt-5">
     <%= render "inverters/cost_cards", totals: totals, tariff: tariff %>
   </div>
 
-  <div class="mt-6 border-t border-slate-700 pt-6">
+  <div class="mt-6 border-t border-slate-200 dark:border-slate-700 pt-6">
     <% if summary.period == "day" %>
       <%= render "inverters/intraday", inverter: inverter, date: summary.date %>
     <% elsif (breakdown = summary.breakdown)&.any? { |_label, value| value.to_f.positive? } %>
-      <p class="mb-3 text-sm text-slate-400">Generation by <%= summary.breakdown_unit %> (kWh)</p>
+      <p class="mb-3 text-sm text-slate-500 dark:text-slate-400">Generation by <%= summary.breakdown_unit %> (kWh)</p>
       <%= column_chart breakdown, ytitle: "kWh", colors: ["#eab308"], height: "260px" %>
     <% else %>
-      <p class="rounded-lg border border-dashed border-slate-700 p-6 text-center text-sm text-slate-400">
+      <p class="rounded-lg border border-dashed border-slate-200 dark:border-slate-700 p-6 text-center text-sm text-slate-500 dark:text-slate-400">
         No energy data for this <%= summary.period %> yet. Aggregates build up as the agent reports daily totals.
       </p>
     <% end %>

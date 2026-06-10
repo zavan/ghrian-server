@@ -15,7 +15,15 @@ Rails.application.routes.draw do
     namespace :v1 do
       resources :inverters, only: [ :index, :show ] do
         resources :readings, only: [ :index ]
+        member do
+          # Downsampled chart series for a day (power kW + SOC %).
+          get :intraday, to: "intraday#show"
+          # Period energy totals + costs for this inverter.
+          get :energy, to: "energy#show"
+        end
       end
+      # Site-wide period energy totals + costs (all inverters combined).
+      get :energy, to: "energy#show"
     end
   end
 

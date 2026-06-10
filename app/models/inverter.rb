@@ -73,6 +73,11 @@ class Inverter < ApplicationRecord
     record_daily_summary(reading)
     broadcast_tile
     reading
+  rescue ActiveRecord::RecordNotUnique
+    # QoS-1 redelivery of a message we already stored (same inverter + timestamp).
+    # The original insert already refreshed the snapshot and summary, so skip it.
+    Rails.logger.debug("[ingest] duplicate reading on #{mqtt_topic} at #{recorded_at}; skipped")
+    nil
   rescue JSON::ParserError => e
     Rails.logger.warn("[ingest] invalid JSON on #{mqtt_topic}: #{e.message}")
     nil

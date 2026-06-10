@@ -1,21 +1,43 @@
 <% content_for :title, "API tokens" %>
 
-<h1 class="mb-6 text-2xl font-semibold">API tokens</h1>
+<h1 class="mb-6 flex items-center gap-2 text-2xl font-semibold">
+  <%= lucide_icon "key-round", class: "size-6 text-amber-600 dark:text-amber-400" %>API tokens
+</h1>
+
+<% if flash[:new_token] %>
+  <section class="card mb-6 border-amber-300 bg-amber-50 dark:border-amber-500/40 dark:bg-amber-500/10"
+           data-controller="clipboard">
+    <p class="mb-3 flex items-center gap-2 font-medium text-amber-800 dark:text-amber-300">
+      <%= lucide_icon "triangle-alert", class: "size-5" %>
+      Copy your new token now — it won't be shown again.
+    </p>
+    <div class="flex flex-wrap items-center gap-3">
+      <code data-clipboard-target="source"
+            class="grow break-all rounded-lg bg-white px-3 py-2 font-mono text-sm dark:bg-slate-800"><%= flash[:new_token] %></code>
+      <button type="button" class="btn" data-action="clipboard#copy">
+        <%= lucide_icon "copy", class: "size-4" %><span data-clipboard-target="label">Copy</span>
+      </button>
+    </div>
+  </section>
+<% end %>
 
 <section class="card">
-  <p class="mb-4 text-slate-400">
+  <p class="mb-4 text-slate-500 dark:text-slate-400">
     Clients authenticate by sending <code>Authorization: Bearer &lt;token&gt;</code>.
-    Treat tokens like passwords.
+    Treat tokens like passwords — only a hash is stored, so a token is shown once at
+    creation and can't be recovered later (revoke and create a new one instead).
   </p>
 
   <%= form_with model: @api_token, url: api_tokens_path do |form| %>
     <%= form.label :name, "Create a token", class: "field-label" %>
     <div class="flex gap-3">
       <%= form.text_field :name, placeholder: "macOS app", autofocus: true, class: "field-input max-w-xs" %>
-      <%= form.submit "Generate", class: "btn" %>
+      <%= button_tag type: "submit", class: "btn" do %>
+        <%= lucide_icon "plus", class: "size-4" %>Generate
+      <% end %>
     </div>
     <% if @api_token.errors.any? %>
-      <small class="mt-1.5 block text-red-400"><%= @api_token.errors.full_messages.to_sentence %></small>
+      <small class="mt-1.5 block text-red-600 dark:text-red-400"><%= @api_token.errors.full_messages.to_sentence %></small>
     <% end %>
   <% end %>
 </section>
@@ -23,24 +45,28 @@
 <% if @api_tokens.any? %>
   <table class="data-table">
     <thead>
-      <tr><th>Name</th><th>Token</th><th>Last used</th><th></th></tr>
+      <tr><th>Name</th><th>Token</th><th>Created</th><th>Last used</th><th></th></tr>
     </thead>
     <tbody>
       <% @api_tokens.each do |token| %>
         <tr>
           <td><%= token.name %></td>
-          <td><code class="break-all"><%= token.token %></code></td>
+          <td><code class="text-slate-500 dark:text-slate-400"><%= token.token_prefix %>…</code></td>
+          <td><%= time_ago_in_words(token.created_at) %> ago</td>
           <td><%= token.last_used_at ? "#{time_ago_in_words(token.last_used_at)} ago" : "never" %></td>
           <td>
-            <%= button_to "Revoke", api_token_path(token), method: :delete, class: "btn-danger",
-                  data: { turbo_confirm: "Revoke “#{token.name}”? Clients using it will stop working." } %>
+            <%= button_to api_token_path(token), method: :delete, class: "btn-danger",
+                  data: { turbo_confirm: "Revoke “#{token.name}”? Clients using it will stop working." } do %>
+              <%= lucide_icon "trash-2", class: "size-4" %>Revoke
+            <% end %>
           </td>
         </tr>
       <% end %>
     </tbody>
   </table>
 <% else %>
-  <div class="rounded-xl border border-dashed border-slate-700 bg-slate-800 p-8 text-center text-slate-400">
+  <div class="rounded-xl border border-dashed border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-8 text-center text-slate-500 dark:text-slate-400">
+    <%= lucide_icon "key-round", class: "mx-auto mb-2 size-8 text-slate-400 dark:text-slate-500" %>
     <p>No tokens yet.</p>
   </div>
 <% end %>

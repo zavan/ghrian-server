@@ -62,8 +62,9 @@ automatically (best-effort; a `mqtt` process restart is always a safe fallback).
 Each metric is self-describing `{ value, unit, label }`; bitfields also carry
 `<name>_active: []string`. Decoding is defensive (values may be number, string, or
 array). The retained `<topic>/availability` (`online`/`offline`) maps to inverter
-status. See the [agent README](https://github.com/zavan/ghrian-agent) for the
-authoritative shape.
+status. See the project-wide
+[payload contract](https://github.com/zavan/ghrian/blob/main/docs/payload.md) for
+the authoritative shape.
 
 ## Getting started
 
@@ -82,9 +83,9 @@ shared installation). You can't remove your own account or the last one.
 
 Then open http://localhost:3000, create an account, and in the admin:
 
-1. **MQTT → Edit**: set host/port and base topic (e.g. `localhost` / `1883` / `solar`).
+1. **MQTT → Edit**: set host/port and base topic (e.g. `localhost` / `1883` / `ghrian`).
 2. **Inverters → Add inverter**: set the MQTT topic the agent publishes to
-   (e.g. `solar/inverter/01`).
+   (e.g. `ghrian/inverter/01`).
 3. **API Tokens**: generate a token for API clients.
 
 > **Encryption keys:** `MqttConfig#password` is encrypted with Active Record
@@ -94,18 +95,18 @@ Then open http://localhost:3000, create an account, and in the admin:
 
 ## Dev against the real agent (reuse its broker)
 
-You only need an MQTT broker on `localhost:1883` publishing under `solar/#` — any
+You only need an MQTT broker on `localhost:1883` publishing under `ghrian/#` — any
 broker works. The easiest is to reuse the one shipped with
 [`ghrian-agent`](https://github.com/zavan/ghrian-agent): clone it alongside this
 repo and start its dev mosquitto.
 
 ```bash
 # in a clone of ghrian-agent:
-make dev-up                                  # mosquitto on localhost:1883 (anonymous, solar/#)
+make dev-up                                  # mosquitto on localhost:1883 (anonymous, ghrian/#)
 
 # in this repo:
 bin/dev                                      # web + listener + css
-# Configure MqttConfig (localhost:1883, base_topic solar) and add inverter solar/inverter/01.
+# Configure MqttConfig (localhost:1883, base_topic ghrian) and add inverter ghrian/inverter/01.
 
 # back in ghrian-agent, point it at your inverter (or fake one reading):
 make go-run ARGS="--config config.yml"       # or `make dev-pub` to publish a sample reading
@@ -137,6 +138,47 @@ Requests without a valid token get `401`.
 bin/rails test     # minitest; ingestion is covered hermetically (no broker needed)
 bin/rubocop        # rails-omakase style
 ```
+
+## Docker
+
+Published to Docker Hub as
+[`felipezavan/ghrian-server`](https://hub.docker.com/r/felipezavan/ghrian-server) (multi-arch:
+amd64 + arm64). The image runs the **web** process by default (Thruster on `:80`,
+auto-running `db:prepare` on boot). The **MQTT listener** is the *same image* with
+the command overridden — run both on the same host so they share the SQLite volume.
+
+The image is **self-serve**: it reads its secrets from the environment, so you don't
+need a Rails `master.key`. Generate four random values once (`openssl rand -hex 64`
+for `SECRET_KEY_BASE`, `-hex 32` for each `AR_ENCRYPTION_*`) and keep them stable:
+
+```bash
+# web — serves the dashboard + API and migrates the DB on boot (start this first)
+docker run -d --name ghrian-web -p 80:80 \
+  -e SECRET_KEY_BASE=... \
+  -e AR_ENCRYPTION_PRIMARY_KEY=... \
+  -e AR_ENCRYPTION_DETERMINISTIC_KEY=... \
+  -e AR_ENCRYPTION_KEY_DERIVATION_SALT=... \
+  -v ghrian-storage:/rails/storage \
+  felipezavan/ghrian-server
+
+# listener — ingests MQTT; same image + volume + env, different command
+docker run -d --name ghrian-mqtt --env-file server.env \
+  -v ghrian-storage:/rails/storage \
+  felipezavan/ghrian-server bin/mqtt-listener
+```
+
+The `AR_ENCRYPTION_*` keys encrypt any broker password you save, so keep them
+stable. (If you build your own image with baked-in credentials, `RAILS_MASTER_KEY`
+still works as an alternative.)
+
+To skip the broker setup screen on a fresh deploy, seed the connection from the
+environment: `MQTT_HOST`, `MQTT_PORT`, `MQTT_BASE_TOPIC`, `MQTT_USERNAME`,
+`MQTT_PASSWORD`, `MQTT_USE_TLS`. They're applied **only when the config row is first
+created** — after that the admin UI is the source of truth.
+
+For the full stack in one command, see the
+[`compose.yml`](https://github.com/zavan/ghrian) in the umbrella repo. Tags:
+`X.Y.Z` / `latest` from releases, `edge` tracks `main`.
 
 ## Production
 

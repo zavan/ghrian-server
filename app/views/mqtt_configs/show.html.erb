@@ -1,8 +1,12 @@
 <% content_for :title, "MQTT connection" %>
 
 <div class="mb-6 flex items-center justify-between gap-4">
-  <h1 class="text-2xl font-semibold">MQTT connection</h1>
-  <%= link_to "Edit", edit_mqtt_config_path, class: "btn" %>
+  <h1 class="flex items-center gap-2 text-2xl font-semibold">
+    <%= lucide_icon "radio", class: "size-6 text-sky-600 dark:text-sky-400" %>MQTT connection
+  </h1>
+  <%= link_to edit_mqtt_config_path, class: "btn" do %>
+    <%= lucide_icon "pencil", class: "size-4" %>Edit
+  <% end %>
 </div>
 
 <section class="card">
@@ -17,14 +21,14 @@
          ["TLS", @mqtt_config.use_tls? ? "enabled" : "disabled"]
        ].each do |label, value| %>
       <div>
-        <dt class="text-xs uppercase tracking-wide text-slate-400"><%= label %></dt>
+        <dt class="text-xs uppercase tracking-wide text-slate-500 dark:text-slate-400"><%= label %></dt>
         <dd class="mt-0.5"><%= value %></dd>
       </div>
     <% end %>
   </dl>
 </section>
 
-<p class="text-slate-400">
+<p class="text-slate-500 dark:text-slate-400">
   The listener subscribes to <code><%= @mqtt_config.subscribe_filter %></code> and matches
   each message to an inverter by its MQTT topic. Saving changes here reconnects the
   running listener automatically.
