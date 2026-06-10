@@ -4,20 +4,20 @@
 <div class="mb-5 flex flex-wrap items-center gap-2">
   <% %w[day month year lifetime].each do |tab| %>
     <%= link_to tab.capitalize, link.call(tab, summary.date),
-          class: "rounded-lg px-3 py-1.5 text-sm font-medium #{tab == summary.period ? 'bg-sky-400 text-sky-950' : 'text-slate-400 hover:text-slate-100'}" %>
+          class: "rounded-lg px-3 py-1.5 text-sm font-medium #{tab == summary.period ? 'bg-sky-500 text-white dark:bg-sky-400 dark:text-sky-950' : 'text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100'}" %>
   <% end %>
 
   <% if summary.navigable? %>
     <div class="ml-auto flex items-center gap-2 text-sm">
-      <%= link_to link.call(summary.period, summary.prev_date), class: "text-slate-400 hover:text-slate-100", aria: { label: "Previous #{summary.period}" } do %>
+      <%= link_to link.call(summary.period, summary.prev_date), class: "text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100", aria: { label: "Previous #{summary.period}" } do %>
         <%= lucide_icon "chevron-left", class: "size-5" %>
       <% end %>
       <span class="min-w-32 text-center font-medium"><%= summary.label %></span>
-      <%= link_to link.call(summary.period, summary.next_date), class: "text-slate-400 hover:text-slate-100", aria: { label: "Next #{summary.period}" } do %>
+      <%= link_to link.call(summary.period, summary.next_date), class: "text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100", aria: { label: "Next #{summary.period}" } do %>
         <%= lucide_icon "chevron-right", class: "size-5" %>
       <% end %>
     </div>
   <% else %>
-    <span class="ml-auto text-sm font-medium text-slate-400"><%= summary.label %></span>
+    <span class="ml-auto text-sm font-medium text-slate-500 dark:text-slate-400"><%= summary.label %></span>
   <% end %>
 </div>

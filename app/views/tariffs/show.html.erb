@@ -2,7 +2,7 @@
 
 <div class="mb-6 flex items-center justify-between gap-4">
   <h1 class="flex items-center gap-2 text-2xl font-semibold">
-    <%= lucide_icon "circle-dollar-sign", class: "size-6 text-green-400" %>Electricity tariff
+    <%= lucide_icon "circle-dollar-sign", class: "size-6 text-green-600 dark:text-green-400" %>Electricity tariff
   </h1>
   <%= link_to edit_tariff_path, class: "btn" do %>
     <%= lucide_icon "pencil", class: "size-4" %>Edit
@@ -12,21 +12,21 @@
 <section class="card">
   <dl class="grid grid-cols-[repeat(auto-fill,minmax(220px,1fr))] gap-4">
     <div>
-      <dt class="text-xs uppercase tracking-wide text-slate-400">Import rate</dt>
+      <dt class="text-xs uppercase tracking-wide text-slate-500 dark:text-slate-400">Import rate</dt>
       <dd class="mt-0.5"><%= @tariff.currency %><%= @tariff.import_rate %> / kWh</dd>
     </div>
     <div>
-      <dt class="text-xs uppercase tracking-wide text-slate-400">Export rate (feed-in)</dt>
+      <dt class="text-xs uppercase tracking-wide text-slate-500 dark:text-slate-400">Export rate (feed-in)</dt>
       <dd class="mt-0.5"><%= @tariff.currency %><%= @tariff.export_rate %> / kWh</dd>
     </div>
     <div>
-      <dt class="text-xs uppercase tracking-wide text-slate-400">Currency</dt>
+      <dt class="text-xs uppercase tracking-wide text-slate-500 dark:text-slate-400">Currency</dt>
       <dd class="mt-0.5"><%= @tariff.currency %></dd>
     </div>
   </dl>
 </section>
 
-<p class="text-slate-400">
+<p class="text-slate-500 dark:text-slate-400">
   These rates drive the cost figures (import cost, export earnings, net, and
   self-consumption savings) shown on each inverter's energy breakdown.
 </p>

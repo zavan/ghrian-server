@@ -4,8 +4,8 @@
 
 <section class="card">
   <h2 class="mb-4 flex items-center gap-2 text-lg font-semibold">
-    <%= lucide_icon "chart-column", class: "size-5 text-slate-400" %>Energy &amp; costs
-    <span class="text-sm font-normal text-slate-400">all inverters</span>
+    <%= lucide_icon "chart-column", class: "size-5 text-slate-500 dark:text-slate-400" %>Energy &amp; costs
+    <span class="text-sm font-normal text-slate-500 dark:text-slate-400">all inverters</span>
   </h2>
 
   <%= render "inverters/period_nav", summary: summary,
@@ -13,13 +13,13 @@
 
   <%= render "inverters/energy_totals", totals: totals %>
 
-  <div class="mt-5 border-t border-slate-700 pt-5">
+  <div class="mt-5 border-t border-slate-200 dark:border-slate-700 pt-5">
     <%= render "inverters/cost_cards", totals: totals, tariff: tariff %>
   </div>
 
   <% if summary.period != "day" && (breakdown = summary.breakdown)&.any? { |_label, value| value.to_f.positive? } %>
-    <div class="mt-6 border-t border-slate-700 pt-6">
-      <p class="mb-3 text-sm text-slate-400">Generation by <%= summary.breakdown_unit %> (kWh)</p>
+    <div class="mt-6 border-t border-slate-200 dark:border-slate-700 pt-6">
+      <p class="mb-3 text-sm text-slate-500 dark:text-slate-400">Generation by <%= summary.breakdown_unit %> (kWh)</p>
       <%= column_chart breakdown, ytitle: "kWh", colors: ["#eab308"], height: "240px" %>
     </div>
   <% end %>

@@ -24,9 +24,9 @@ module ApplicationHelper
   def flash_classes(type)
     case type.to_sym
     when :notice
-      "border-green-500 bg-green-500/15 text-green-200"
+      "border-green-500 bg-green-500/15 text-green-700 dark:text-green-200"
     else
-      "border-red-500 bg-red-500/15 text-red-200"
+      "border-red-500 bg-red-500/15 text-red-700 dark:text-red-200"
     end
   end
 

@@ -4,18 +4,18 @@
 <% cons_len = cons ? (circ * cons / 100.0).round(2) : 0 %>
 <% grid_len = grid ? (circ * grid / 100.0).round(2) : 0 %>
 
-<div class="rounded-xl border border-slate-700 bg-slate-800/50 p-5">
+<div class="rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-slate-800/50 p-5">
   <div class="mb-3 flex items-baseline justify-between">
-    <p class="text-sm text-slate-400">PV Analysis</p>
-    <p class="text-sm text-slate-400">Generation
-      <span class="font-semibold text-slate-100"><%= Inverter::Snapshot.kwh(snapshot.daily_yield) %></span>
+    <p class="text-sm text-slate-500 dark:text-slate-400">PV Analysis</p>
+    <p class="text-sm text-slate-500 dark:text-slate-400">Generation
+      <span class="font-semibold text-slate-900 dark:text-slate-100"><%= Inverter::Snapshot.kwh(snapshot.daily_yield) %></span>
     </p>
   </div>
 
   <div class="flex items-center gap-5">
     <div class="relative size-28 shrink-0">
       <svg class="size-full -rotate-90" viewBox="0 0 96 96">
-        <circle cx="48" cy="48" r="36" fill="none" stroke="#334155" stroke-width="9" />
+        <circle cx="48" cy="48" r="36" fill="none" stroke-width="9" class="stroke-slate-200 dark:stroke-slate-700" />
         <% if cons %>
           <circle cx="48" cy="48" r="36" fill="none" stroke="#a855f7" stroke-width="9"
                   stroke-dasharray="<%= cons_len %> <%= circ %>" />
@@ -23,23 +23,23 @@
                   stroke-dasharray="<%= grid_len %> <%= circ %>" stroke-dashoffset="<%= -cons_len %>" />
         <% end %>
       </svg>
-      <div class="absolute inset-0 flex items-center justify-center text-amber-400">
+      <div class="absolute inset-0 flex items-center justify-center text-amber-600 dark:text-amber-400">
         <%= power_icon :grid, size: 22 %>
       </div>
     </div>
 
     <dl class="space-y-3 text-sm">
       <div>
-        <dt class="font-semibold text-purple-400">
+        <dt class="font-semibold text-purple-600 dark:text-purple-400">
           <%= Inverter::Snapshot.kwh(snapshot.to_consumption_kwh) %><%= " · #{cons}%" if cons %>
         </dt>
-        <dd class="text-slate-400">To Consumption</dd>
+        <dd class="text-slate-500 dark:text-slate-400">To Consumption</dd>
       </div>
       <div>
-        <dt class="font-semibold text-sky-400">
+        <dt class="font-semibold text-sky-600 dark:text-sky-400">
           <%= Inverter::Snapshot.kwh(snapshot.to_grid_kwh) %><%= " · #{grid}%" if grid %>
         </dt>
-        <dd class="text-slate-400">To Grid</dd>
+        <dd class="text-slate-500 dark:text-slate-400">To Grid</dd>
       </div>
     </dl>
   </div>

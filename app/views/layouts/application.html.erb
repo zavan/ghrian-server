@@ -6,8 +6,24 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="application-name" content="ghrian">
     <meta name="apple-mobile-web-app-title" content="ghrian">
-    <meta name="theme-color" content="#0f172a">
+    <meta name="theme-color" content="#f1f5f9">
     <meta name="mobile-web-app-capable" content="yes">
+
+    <%# Apply the saved theme (or the OS preference, when none is saved) before
+        first paint to avoid a flash of the wrong theme. The toggle is wired up by
+        the `theme` Stimulus controller. %>
+    <script>
+      (function () {
+        try {
+          var saved = localStorage.getItem("theme");
+          var dark = saved ? saved === "dark"
+                           : window.matchMedia("(prefers-color-scheme: dark)").matches;
+          document.documentElement.classList.toggle("dark", dark);
+          var meta = document.querySelector('meta[name="theme-color"]');
+          if (meta) meta.setAttribute("content", dark ? "#0f172a" : "#f1f5f9");
+        } catch (e) {}
+      })();
+    </script>
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
@@ -24,11 +40,11 @@
     <%= javascript_importmap_tags %>
   </head>
 
-  <body class="min-h-screen bg-slate-900 text-slate-200 antialiased">
+  <body class="min-h-screen bg-slate-100 text-slate-700 antialiased dark:bg-slate-900 dark:text-slate-200">
     <% if authenticated? %>
-      <header class="flex items-center gap-6 border-b border-slate-700 bg-slate-800 px-6 py-3">
-        <a href="<%= root_path %>" class="inline-flex items-center gap-1.5 text-lg font-bold text-slate-100">
-          <%= lucide_icon "sun", class: "size-5 text-amber-400" %>ghrian
+      <header class="flex items-center gap-6 border-b border-slate-200 bg-white px-6 py-3 dark:border-slate-700 dark:bg-slate-800">
+        <a href="<%= root_path %>" class="inline-flex items-center gap-1.5 text-lg font-bold text-slate-900 dark:text-slate-100">
+          <%= lucide_icon "sun", class: "size-5 text-amber-500 dark:text-amber-400" %>ghrian
         </a>
         <nav class="flex flex-1 gap-5 text-sm">
           <% [
@@ -39,13 +55,19 @@
                ["API Tokens", api_tokens_path, "key-round"],
                ["Users", users_path, "users"]
              ].each do |label, path, icon| %>
-            <%= link_to path, class: "inline-flex items-center gap-1.5 text-slate-400 hover:text-slate-100" do %>
+            <%= link_to path, class: "inline-flex items-center gap-1.5 text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100" do %>
               <%= lucide_icon icon, class: "size-4" %><%= label %>
             <% end %>
           <% end %>
         </nav>
+        <button type="button" data-controller="theme" data-action="theme#toggle"
+                class="inline-flex items-center text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100"
+                title="Toggle light/dark theme" aria-label="Toggle light/dark theme">
+          <%= lucide_icon "sun", class: "size-4 dark:hidden" %>
+          <%= lucide_icon "moon", class: "size-4 hidden dark:block" %>
+        </button>
         <%= button_to session_path, method: :delete,
-              class: "inline-flex items-center gap-1.5 text-sm text-sky-400 hover:text-sky-300" do %>
+              class: "inline-flex items-center gap-1.5 text-sm text-sky-600 hover:text-sky-700 dark:text-sky-400 dark:hover:text-sky-300" do %>
           <%= lucide_icon "log-out", class: "size-4" %>Sign out
         <% end %>
       </header>
@@ -53,6 +75,7 @@
 
     <main class="mx-auto max-w-5xl p-6">
       <% flash.each do |type, message| %>
+        <% next if type == "new_token" # rendered once, with a copy button, on the API tokens page %>
         <div class="mb-4 flex items-center gap-2 rounded-xl border px-4 py-3 <%= flash_classes(type) %>">
           <%= flash_icon(type) %><span><%= message %></span>
         </div>
@@ -60,5 +83,9 @@
 
       <%= yield %>
     </main>
+
+    <footer class="mx-auto max-w-5xl px-6 py-6 text-center text-sm text-slate-400 dark:text-slate-500">
+      &copy; <%= Date.current.year %> Felipe Zavan
+    </footer>
   </body>
 </html>

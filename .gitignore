@@ -33,6 +33,9 @@
 # Ignore key files for decrypting credentials and more.
 /config/*.key
 
+# Ignore the personal Kamal deploy overlay (real host/IP/domain/tailnet values).
+/config/deploy.production.yml
+
 # Local editor / agent state.
 /.claude/
 

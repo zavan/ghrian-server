@@ -5,7 +5,7 @@
 
 <div class="mb-6 flex items-center justify-between gap-4">
   <h1 class="flex items-center gap-2 text-2xl font-semibold">
-    <%= lucide_icon "layout-dashboard", class: "size-6 text-sky-400" %>Dashboard
+    <%= lucide_icon "layout-dashboard", class: "size-6 text-sky-600 dark:text-sky-400" %>Dashboard
   </h1>
   <%= link_to new_inverter_path, class: "btn" do %>
     <%= lucide_icon "plus", class: "size-4" %>Add inverter
@@ -19,8 +19,8 @@
 
   <%= render partial: "inverters/panel", collection: @inverters, as: :inverter %>
 <% else %>
-  <div class="rounded-xl border border-dashed border-slate-700 bg-slate-800 p-8 text-center text-slate-400">
-    <%= lucide_icon "zap-off", class: "mx-auto mb-2 size-8 text-slate-500" %>
+  <div class="rounded-xl border border-dashed border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-8 text-center text-slate-500 dark:text-slate-400">
+    <%= lucide_icon "zap-off", class: "mx-auto mb-2 size-8 text-slate-400 dark:text-slate-500" %>
     <p>No inverters yet.</p>
     <p class="mt-1">Add one with the MQTT topic the agent publishes to (e.g. <code>ghrian/inverter/01</code>).</p>
     <%= link_to new_inverter_path, class: "btn mt-3" do %>

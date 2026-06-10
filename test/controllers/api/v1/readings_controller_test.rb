@@ -2,7 +2,7 @@ require "test_helper"
 
 class Api::V1::ReadingsControllerTest < ActionDispatch::IntegrationTest
   def auth
-    { "Authorization" => "Bearer #{api_tokens(:macos).token}" }
+    { "Authorization" => "Bearer #{RAW_API_TOKENS[:macos]}" }
   end
 
   test "requires a token" do

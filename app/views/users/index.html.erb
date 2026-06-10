@@ -1,18 +1,18 @@
 <% content_for :title, "Users" %>
 
 <h1 class="mb-6 flex items-center gap-2 text-2xl font-semibold">
-  <%= lucide_icon "users", class: "size-6 text-sky-400" %>Users
+  <%= lucide_icon "users", class: "size-6 text-sky-600 dark:text-sky-400" %>Users
 </h1>
 
 <section class="card">
-  <p class="mb-4 text-slate-400">
+  <p class="mb-4 text-slate-500 dark:text-slate-400">
     Public sign-up is closed. Create accounts here for anyone who should have access —
     every account is an admin of this installation.
   </p>
 
   <%= form_with model: @user, url: users_path, class: "max-w-xl" do |form| %>
     <% if @user.errors.any? %>
-      <div class="mb-4 rounded-xl border border-red-500 bg-red-500/15 px-4 py-3 text-sm text-red-200">
+      <div class="mb-4 rounded-xl border border-red-500 bg-red-500/15 px-4 py-3 text-sm text-red-700 dark:text-red-200">
         <%= @user.errors.full_messages.to_sentence %>
       </div>
     <% end %>
@@ -44,7 +44,7 @@
       <tr>
         <td>
           <%= user.email_address %>
-          <% if user == Current.user %><span class="ml-1 text-xs text-slate-500">(you)</span><% end %>
+          <% if user == Current.user %><span class="ml-1 text-xs text-slate-400 dark:text-slate-500">(you)</span><% end %>
         </td>
         <td><%= user.created_at.to_date.to_fs(:long) %></td>
         <td>

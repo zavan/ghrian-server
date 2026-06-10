@@ -4,14 +4,16 @@ service: ghrian-server
 # Name of the container image — the one published to Docker Hub.
 image: felipezavan/ghrian-server
 
-# Deploy to these servers.
+# Deploy to these servers. The MQTT listener is its own long-running process
+# (a blocking subscribe loop — it can't share Puma like Solid Queue does), so it
+# runs as a second role with the same image.
 servers:
   web:
     - your-server-ip   # e.g. 203.0.113.10
-  # job:
-  #   hosts:
-  #     - your-server-ip
-  #   cmd: bin/jobs
+  listener:
+    hosts:
+      - your-server-ip
+    cmd: bin/mqtt-listener
 
 # Enable SSL auto certification via Let's Encrypt and allow for multiple apps on a single web server.
 # If used with Cloudflare, set encryption mode in SSL/TLS setting to "Full" to enable CF-to-app encryption.
@@ -30,21 +32,31 @@ registry:
   server: docker.io
   username: felipezavan
 
-  # Needed for authenticated registries.
-  # username: your-user
-
-  # Always use an access token rather than real password when possible.
-  # password:
-  #   - KAMAL_REGISTRY_PASSWORD
+  # A Docker Hub access token (not your real password). Resolved from the env at
+  # deploy time via .kamal/secrets. Kamal logs in on the server to pull the image.
+  password:
+    - KAMAL_REGISTRY_PASSWORD
 
 # Inject ENV variables into containers (secrets come from .kamal/secrets).
+# The image carries no master.key (see .dockerignore); it reads its secrets from
+# the environment, exactly like compose.yml. Generate each with `openssl rand`
+# (see .env.example) and export them before deploying.
 env:
   secret:
-    - RAILS_MASTER_KEY
+    - SECRET_KEY_BASE
+    - AR_ENCRYPTION_PRIMARY_KEY
+    - AR_ENCRYPTION_DETERMINISTIC_KEY
+    - AR_ENCRYPTION_KEY_DERIVATION_SALT
   clear:
     # Run the Solid Queue Supervisor inside the web server's Puma process to do jobs.
     # When you start using multiple servers, you should split out job processing to a dedicated machine.
     SOLID_QUEUE_IN_PUMA: true
+
+    # Seed the MQTT connection on first boot so the listener connects with no UI
+    # step (only applied when the config row is first created). The broker accessory
+    # is reachable by its container name on the kamal docker network.
+    MQTT_HOST: ghrian-server-broker
+    MQTT_BASE_TOPIC: ghrian
 
     # Set number of processes dedicated to Solid Queue (default: 1)
     # JOB_CONCURRENCY: 3
@@ -95,26 +107,18 @@ builder:
 # ssh:
 #   user: app
 
-# Use accessory services (secrets come from .kamal/secrets).
-# accessories:
-#   db:
-#     image: mysql:8.0
-#     host: 192.168.0.2
-#     # Change to 3306 to expose port to the world instead of just local network.
-#     port: "127.0.0.1:3306:3306"
-#     env:
-#       clear:
-#         MYSQL_ROOT_HOST: '%'
-#       secret:
-#         - MYSQL_ROOT_PASSWORD
-#     files:
-#       - config/mysql/production.cnf:/etc/mysql/my.cnf
-#       - db/production.sql:/docker-entrypoint-initdb.d/setup.sql
-#     directories:
-#       - data:/var/lib/mysql
-#   redis:
-#     image: valkey/valkey:8
-#     host: 192.168.0.2
-#     port: 6379
-#     directories:
-#       - data:/data
+# The MQTT broker the stack speaks over. The agent (at home) publishes here and
+# the listener subscribes. Accessories share the `kamal` docker network with the
+# app containers, so web/listener reach it at host `ghrian-server-broker`.
+#
+# `port` below binds to loopback by default — override it per host (e.g. to a
+# Tailscale/VPN IP) so home consumers can reach it without exposing 1883 publicly.
+accessories:
+  broker:
+    image: eclipse-mosquitto:2
+    host: your-server-ip
+    port: "127.0.0.1:1883:1883"
+    files:
+      - config/mosquitto/mosquitto.conf:/mosquitto/config/mosquitto.conf
+    directories:
+      - broker-data:/mosquitto/data

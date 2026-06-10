@@ -1,6 +1,6 @@
 <%= form_with model: inverter, class: "max-w-xl" do |form| %>
   <% if inverter.errors.any? %>
-    <div class="mb-4 rounded-xl border border-red-500 bg-red-500/15 px-4 py-3 text-red-200">
+    <div class="mb-4 rounded-xl border border-red-500 bg-red-500/15 px-4 py-3 text-red-700 dark:text-red-200">
       <%= pluralize(inverter.errors.count, "error") %> prevented saving:
       <ul class="ml-5 list-disc">
         <% inverter.errors.full_messages.each do |message| %>
@@ -18,7 +18,7 @@
   <div class="mb-4">
     <%= form.label :mqtt_topic, "MQTT topic", class: "field-label" %>
     <%= form.text_field :mqtt_topic, placeholder: "ghrian/inverter/01", class: "field-input" %>
-    <small class="mt-1.5 block text-slate-400">The agent's base topic. The retained <code>&lt;topic&gt;/availability</code> is derived from it.</small>
+    <small class="mt-1.5 block text-slate-500 dark:text-slate-400">The agent's base topic. The retained <code>&lt;topic&gt;/availability</code> is derived from it.</small>
   </div>
 
   <div class="mb-4">
