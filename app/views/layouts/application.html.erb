@@ -41,51 +41,86 @@
   </head>
 
   <body class="min-h-screen bg-slate-100 text-slate-700 antialiased dark:bg-slate-900 dark:text-slate-200">
-    <% if authenticated? %>
-      <header class="flex items-center gap-6 border-b border-slate-200 bg-white px-6 py-3 dark:border-slate-700 dark:bg-slate-800">
-        <a href="<%= root_path %>" class="inline-flex items-center gap-1.5 text-lg font-bold text-slate-900 dark:text-slate-100">
-          <%= lucide_icon "sun", class: "size-5 text-amber-500 dark:text-amber-400" %>ghrian
-        </a>
-        <nav class="flex flex-1 gap-5 text-sm">
-          <% [
-               ["Dashboard", root_path, "layout-dashboard"],
-               ["Inverters", inverters_path, "zap"],
-               ["MQTT", mqtt_config_path, "radio"],
-               ["Costs", tariff_path, "circle-dollar-sign"],
-               ["API Tokens", api_tokens_path, "key-round"],
-               ["Users", users_path, "users"]
-             ].each do |label, path, icon| %>
-            <%= link_to path, class: "inline-flex items-center gap-1.5 text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100" do %>
-              <%= lucide_icon icon, class: "size-4" %><%= label %>
-            <% end %>
-          <% end %>
-        </nav>
-        <button type="button" data-controller="theme" data-action="theme#toggle"
-                class="inline-flex items-center text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100"
-                title="Toggle light/dark theme" aria-label="Toggle light/dark theme">
-          <%= lucide_icon "sun", class: "size-4 dark:hidden" %>
-          <%= lucide_icon "moon", class: "size-4 hidden dark:block" %>
-        </button>
-        <%= button_to session_path, method: :delete,
-              class: "inline-flex items-center gap-1.5 text-sm text-sky-600 hover:text-sky-700 dark:text-sky-400 dark:hover:text-sky-300" do %>
-          <%= lucide_icon "log-out", class: "size-4" %>Sign out
-        <% end %>
-      </header>
-    <% end %>
+    <div data-controller="sidebar" class="<%= "lg:flex lg:h-screen lg:overflow-hidden" if authenticated? %>">
+      <% if authenticated? %>
+        <%# Mobile top bar: just the hamburger + wordmark. Hidden once the sidebar pins (lg). %>
+        <header class="flex items-center gap-3 border-b border-slate-200 bg-white px-4 py-3 lg:hidden dark:border-slate-700 dark:bg-slate-800">
+          <button type="button" data-action="sidebar#toggle"
+                  class="inline-flex items-center text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100"
+                  aria-label="Open navigation menu">
+            <%= lucide_icon "menu", class: "size-6" %>
+          </button>
+          <a href="<%= root_path %>" class="inline-flex items-center gap-1.5 text-lg font-bold text-slate-900 dark:text-slate-100">
+            <%= lucide_icon "sun", class: "size-5 text-amber-500 dark:text-amber-400" %>ghrian
+          </a>
+        </header>
 
-    <main class="mx-auto max-w-5xl p-6">
-      <% flash.each do |type, message| %>
-        <% next if type == "new_token" # rendered once, with a copy button, on the API tokens page %>
-        <div class="mb-4 flex items-center gap-2 rounded-xl border px-4 py-3 <%= flash_classes(type) %>">
-          <%= flash_icon(type) %><span><%= message %></span>
-        </div>
+        <%# Dimmed backdrop behind the open drawer (mobile only). %>
+        <div data-sidebar-target="backdrop" data-action="click->sidebar#close"
+             class="fixed inset-0 z-30 hidden bg-slate-900/50 lg:hidden"></div>
+
+        <%# Sidebar: off-canvas drawer on mobile, pinned column on large screens. %>
+        <aside data-sidebar-target="panel"
+               class="fixed inset-y-0 left-0 z-40 flex w-64 max-w-[80vw] -translate-x-full flex-col border-r border-slate-200 bg-white transition-transform duration-200 ease-out lg:static lg:z-auto lg:h-screen lg:max-w-none lg:translate-x-0 dark:border-slate-700 dark:bg-slate-800">
+          <div class="flex items-center justify-between px-5 py-4">
+            <a href="<%= root_path %>" class="inline-flex items-center gap-1.5 text-lg font-bold text-slate-900 dark:text-slate-100">
+              <%= lucide_icon "sun", class: "size-5 text-amber-500 dark:text-amber-400" %>ghrian
+            </a>
+            <button type="button" data-action="sidebar#close"
+                    class="inline-flex items-center text-slate-500 hover:text-slate-900 lg:hidden dark:text-slate-400 dark:hover:text-slate-100"
+                    aria-label="Close navigation menu">
+              <%= lucide_icon "x", class: "size-5" %>
+            </button>
+          </div>
+
+          <nav class="flex flex-1 flex-col gap-1 overflow-y-auto px-3 pb-4">
+            <% [
+                 ["Dashboard", root_path, "layout-dashboard"],
+                 ["Inverters", inverters_path, "zap"],
+                 ["MQTT", mqtt_config_path, "radio"],
+                 ["Costs", tariff_path, "circle-dollar-sign"],
+                 ["API Tokens", api_tokens_path, "key-round"],
+                 ["Users", users_path, "users"]
+               ].each do |label, path, icon| %>
+              <% active = current_page?(path) %>
+              <%= link_to path, "aria-current": ("page" if active),
+                    class: "flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm font-medium #{active ? "bg-slate-100 text-slate-900 dark:bg-slate-700/60 dark:text-slate-100" : "text-slate-500 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-slate-700/60 dark:hover:text-slate-100"}" do %>
+                <%= lucide_icon icon, class: "size-4 shrink-0" %><%= label %>
+              <% end %>
+            <% end %>
+          </nav>
+
+          <div class="flex items-center justify-between border-t border-slate-200 px-5 py-4 dark:border-slate-700">
+            <button type="button" data-controller="theme" data-action="theme#toggle"
+                    class="inline-flex items-center text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100"
+                    title="Toggle light/dark theme" aria-label="Toggle light/dark theme">
+              <%= lucide_icon "sun", class: "size-5 dark:hidden" %>
+              <%= lucide_icon "moon", class: "size-5 hidden dark:block" %>
+            </button>
+            <%= button_to session_path, method: :delete,
+                  class: "inline-flex items-center gap-1.5 text-sm text-sky-600 hover:text-sky-700 dark:text-sky-400 dark:hover:text-sky-300" do %>
+              <%= lucide_icon "log-out", class: "size-4" %>Sign out
+            <% end %>
+          </div>
+        </aside>
       <% end %>
 
-      <%= yield %>
-    </main>
+      <div class="<%= "flex min-w-0 flex-1 flex-col lg:overflow-y-auto" if authenticated? %>">
+        <main class="mx-auto w-full max-w-5xl p-6">
+          <% flash.each do |type, message| %>
+            <% next if type == "new_token" # rendered once, with a copy button, on the API tokens page %>
+            <div class="mb-4 flex items-center gap-2 rounded-xl border px-4 py-3 <%= flash_classes(type) %>">
+              <%= flash_icon(type) %><span><%= message %></span>
+            </div>
+          <% end %>
 
-    <footer class="mx-auto max-w-5xl px-6 py-6 text-center text-sm text-slate-400 dark:text-slate-500">
-      &copy; <%= Date.current.year %> Felipe Zavan
-    </footer>
+          <%= yield %>
+        </main>
+
+        <footer class="mx-auto max-w-5xl px-6 py-6 text-center text-sm text-slate-400 dark:text-slate-500">
+          &copy; <%= Date.current.year %> Felipe Zavan
+        </footer>
+      </div>
+    </div>
   </body>
 </html>
