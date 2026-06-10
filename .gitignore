@@ -35,6 +35,7 @@
 
 # Ignore the personal Kamal deploy overlay (real host/IP/domain/tailnet values).
 /config/deploy.production.yml
+/.kamal/secrets.production
 
 # Local editor / agent state.
 /.claude/
