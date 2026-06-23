@@ -72,6 +72,6 @@ gem "mqtt", "~> 0.7.0"
 
 # Frontend, no Node bundler: Tailwind via the standalone CLI, Chart.js via
 # importmap, and Lucide icons rendered as inline SVG (https://lucide.dev/icons).
-gem "tailwindcss-rails", "~> 4.4"
+gem "tailwindcss-rails", "~> 4.6"
 gem "chartkick", "~> 5.2"
 gem "lucide-rails", "~> 0.7"
